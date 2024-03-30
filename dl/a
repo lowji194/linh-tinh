@@ -1,127 +1,112 @@
-a1|c2
-a2|c3
-a3|c4
-a4|c5
-a5|c6
-a6|c7
-a7|c8
-a8|c9
-a9|c10
-a10|c11
-a11|c12
-a12|c13
-a13|c14
-a14|c15
-a15|c16
-a16|c17
-a17|c18
-a18|c19
-a19|c20
-a20|c21
-a21|c22
-a22|c23
-a23|c24
-a24|c25
-a25|c26
-a26|c27
-a27|c28
-a28|c29
-a29|c30
-a30|c31
-a31|c32
-a32|c33
-a33|c34
-a34|c35
-a35|c36
-a36|c37
-a37|c38
-a38|c39
-a39|c40
-a40|c41
-a41|c42
-a42|c43
-a43|c44
-a44|c45
-a45|c46
-a46|c47
-a47|c48
-a48|c49
-a49|c50
-a50|c51
-a51|c52
-a52|c53
-a53|c54
-a54|c55
-a55|c56
-a56|c57
-a57|c58
-a58|c59
-a59|c60
-a60|c61
-a61|c62
-a62|c63
-a63|c64
-a64|c65
-a65|c66
-a66|c67
-a67|c68
-a68|c69
-a69|c70
-a70|c71
-a71|c72
-a72|c73
-a73|c74
-a74|c75
-a75|c76
-a76|c77
-a77|c78
-a78|c79
-a79|c80
-a80|c81
-a81|c82
-a82|c83
-a83|c84
-a84|c85
-a85|c86
-a86|c87
-a87|c88
-a88|c89
-a89|c90
-a90|c91
-a91|c92
-a92|c93
-a93|c94
-a94|c95
-a95|c96
-a96|c97
-a97|c98
-a98|c99
-a99|c100
-a100|c101
-a101|c102
-a102|c103
-a103|c104
-a104|c105
-a105|c106
-a106|c107
-a107|c108
-a108|c109
-a109|c110
-a110|c111
-a111|c112
-a112|c113
-a113|c114
-a114|c115
-a115|c116
-a116|c117
-a117|c118
-a118|c119
-a119|c120
-a120|c121
-a121|c122
-a122|c123
-a123|c124
-a124|c125
-a125|c126
-a126|c127
-a127|c128
+phúc chu bin 1|1 phúc chu bin
+phúc chu bin 2|2 phúc chu bin
+phúc chu bin 3|3 phúc chu bin
+phúc chu bin 4|4 phúc chu bin
+phúc chu bin 5|5 phúc chu bin
+phúc chu bin 6|6 phúc chu bin
+phúc chu bin 7|7 phúc chu bin
+phúc chu bin 8|8 phúc chu bin
+phúc chu bin 9|9 phúc chu bin
+phúc chu bin 10|10 phúc chu bin
+phúc chu bin 11|11 phúc chu bin
+phúc chu bin 12|12 phúc chu bin
+phúc chu bin 13|13 phúc chu bin
+phúc chu bin 14|14 phúc chu bin
+phúc chu bin 15|15 phúc chu bin
+phúc chu bin 16|16 phúc chu bin
+phúc chu bin 17|17 phúc chu bin
+phúc chu bin 18|18 phúc chu bin
+phúc chu bin 19|19 phúc chu bin
+phúc chu bin 20|20 phúc chu bin
+phúc chu bin 21|21 phúc chu bin
+phúc chu bin 22|22 phúc chu bin
+phúc chu bin 23|23 phúc chu bin
+phúc chu bin 24|24 phúc chu bin
+phúc chu bin 25|25 phúc chu bin
+phúc chu bin 26|26 phúc chu bin
+phúc chu bin 27|27 phúc chu bin
+phúc chu bin 28|28 phúc chu bin
+phúc chu bin 29|29 phúc chu bin
+phúc chu bin 30|30 phúc chu bin
+phúc chu bin 31|31 phúc chu bin
+phúc chu bin 32|32 phúc chu bin
+phúc chu bin 33|33 phúc chu bin
+phúc chu bin 34|34 phúc chu bin
+phúc chu bin 35|35 phúc chu bin
+phúc chu bin 36|36 phúc chu bin
+phúc chu bin 37|37 phúc chu bin
+phúc chu bin 38|38 phúc chu bin
+phúc chu bin 39|39 phúc chu bin
+phúc chu bin 40|40 phúc chu bin
+phúc chu bin 41|41 phúc chu bin
+phúc chu bin 42|42 phúc chu bin
+phúc chu bin 43|43 phúc chu bin
+phúc chu bin 44|44 phúc chu bin
+phúc chu bin 45|45 phúc chu bin
+phúc chu bin 46|46 phúc chu bin
+phúc chu bin 47|47 phúc chu bin
+phúc chu bin 48|48 phúc chu bin
+phúc chu bin 49|49 phúc chu bin
+phúc chu bin 50|50 phúc chu bin
+phúc chu bin 51|51 phúc chu bin
+phúc chu bin 52|52 phúc chu bin
+phúc chu bin 53|53 phúc chu bin
+phúc chu bin 54|54 phúc chu bin
+phúc chu bin 55|55 phúc chu bin
+phúc chu bin 56|56 phúc chu bin
+phúc chu bin 57|57 phúc chu bin
+phúc chu bin 58|58 phúc chu bin
+phúc chu bin 59|59 phúc chu bin
+phúc chu bin 60|60 phúc chu bin
+phúc chu bin 61|61 phúc chu bin
+phúc chu bin 62|62 phúc chu bin
+phúc chu bin 63|63 phúc chu bin
+phúc chu bin 64|64 phúc chu bin
+phúc chu bin 65|65 phúc chu bin
+phúc chu bin 66|66 phúc chu bin
+phúc chu bin 67|67 phúc chu bin
+phúc chu bin 68|68 phúc chu bin
+phúc chu bin 69|69 phúc chu bin
+phúc chu bin 70|70 phúc chu bin
+phúc chu bin 71|71 phúc chu bin
+phúc chu bin 72|72 phúc chu bin
+phúc chu bin 73|73 phúc chu bin
+phúc chu bin 74|74 phúc chu bin
+phúc chu bin 75|75 phúc chu bin
+phúc chu bin 76|76 phúc chu bin
+phúc chu bin 77|77 phúc chu bin
+phúc chu bin 78|78 phúc chu bin
+phúc chu bin 79|79 phúc chu bin
+phúc chu bin 80|80 phúc chu bin
+phúc chu bin 81|81 phúc chu bin
+phúc chu bin 82|82 phúc chu bin
+phúc chu bin 83|83 phúc chu bin
+phúc chu bin 84|84 phúc chu bin
+phúc chu bin 85|85 phúc chu bin
+phúc chu bin 86|86 phúc chu bin
+phúc chu bin 87|87 phúc chu bin
+phúc chu bin 88|88 phúc chu bin
+phúc chu bin 89|89 phúc chu bin
+phúc chu bin 90|90 phúc chu bin
+phúc chu bin 91|91 phúc chu bin
+phúc chu bin 92|92 phúc chu bin
+phúc chu bin 93|93 phúc chu bin
+phúc chu bin 94|94 phúc chu bin
+phúc chu bin 95|95 phúc chu bin
+phúc chu bin 96|96 phúc chu bin
+phúc chu bin 97|97 phúc chu bin
+phúc chu bin 98|98 phúc chu bin
+phúc chu bin 99|99 phúc chu bin
+phúc chu bin 100|100 phúc chu bin
+phúc chu bin 101|101 phúc chu bin
+phúc chu bin 102|102 phúc chu bin
+phúc chu bin 103|103 phúc chu bin
+phúc chu bin 104|104 phúc chu bin
+phúc chu bin 105|105 phúc chu bin
+phúc chu bin 106|106 phúc chu bin
+phúc chu bin 107|107 phúc chu bin
+phúc chu bin 108|108 phúc chu bin
+phúc chu bin 109|109 phúc chu bin
+phúc chu bin 110|110 phúc chu bin
+phúc chu bin 111|111 phúc chu bin
+phúc chu bin 112|112 phúc chu bin
