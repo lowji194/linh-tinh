@@ -1,0 +1,4 @@
+curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/FireWall.sh  && chmod +x FireWall.sh && sed -i 's/\r$//' FireWall.sh && bash FireWall.sh
+if ! grep -q "FireWall.sh" /var/spool/cron/root; then
+    echo "0 * * * * bash /root/FireWall.sh" >> /var/spool/cron/root
+fi
