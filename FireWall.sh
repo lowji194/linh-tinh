@@ -42,4 +42,7 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
     # Tải lại Firewalld
     sudo firewall-cmd --reload
     echo "Hoàn tất chặn IP lạ"
+else
+    # Đường dẫn không tồn tại, in thông báo và kết thúc script
+    echo "Chỉ sử dụng cho khách Mua Tool"
 fi
