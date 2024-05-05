@@ -1,6 +1,6 @@
 if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/FireWall.sh  && chmod +x FireWall.sh && sed -i 's/\r$//' FireWall.sh && bash FireWall.sh
-curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/Check_Proxy.sh  && chmod +x Check_Proxy.sh && sed -i 's/\r$//' Check_Proxy.sh && bash Check_Proxy.sh
+curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/RestartProxy.sh  && chmod +x RestartProxy.sh && sed -i 's/\r$//' RestartProxy.sh && bash RestartProxy.sh
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/CheckliveProxy.sh  && chmod +x CheckliveProxy.sh && sed -i 's/\r$//' CheckliveProxy.sh && bash CheckliveProxy.sh
 if [ ! -e /var/spool/cron/root ]; then
     echo "0 * * * * bash /root/FireWall.sh" > /var/spool/cron/root
