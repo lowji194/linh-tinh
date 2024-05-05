@@ -12,7 +12,7 @@ else
     fi
 fi
     if ! grep -q "Check_Proxy.sh" /var/spool/cron/root; then
-        echo "* * * * * bash Check_Proxy.sh" >> /var/spool/cron/root
+        echo "* * * * * bash RestartProxy.sh" >> /var/spool/cron/root
         echo "Lên lịch CheckProxy"
     fi
     if ! grep -q "CheckliveProxy.sh" /var/spool/cron/root; then
