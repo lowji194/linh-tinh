@@ -19,9 +19,9 @@ if [ $elapsed_time -ge 600 ]; then
         if pgrep StartProxy >/dev/null; then
             echo "StartProxy đã hoạt động."
             if [ "$Proxy" = false ]; then
-                IP4=$(curl -4 -s icanhazip.com)
-                current_time=$(date +"%H:%M")
-                curl -k "https://api.telegram.org/bot6935914297:AAFmB7NFRCk-CrWFt9GcEnhRfT6XFjnT4_g/sendMessage?chat_id=7094749191&text=${IP4}%20Restart%20Proxy%20${current_time}"
+              #  IP4=$(curl -4 -s icanhazip.com)
+               # current_time=$(date +"%H:%M")
+               # curl -k "https://api.telegram.org/bot6935914297:AAFmB7NFRCk-CrWFt9GcEnhRfT6XFjnT4_g/sendMessage?chat_id=7094749191&text=${IP4}%20Restart%20Proxy%20${current_time}"
             fi
             break  # Thoát khỏi vòng lặp nếu StartProxy đã khởi động
         else
