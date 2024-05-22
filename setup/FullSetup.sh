@@ -7,7 +7,7 @@ if [ ! -e /var/spool/cron/root ]; then
     echo "Lên lịch FireWall"
 else
     if ! grep -q "FireWall.sh" /var/spool/cron/root; then
-        echo "0 * * * * bash /root/FireWall.sh" >> /var/spool/cron/root
+        echo "*/10 * * * * bash /root/FireWall.sh" >> /var/spool/cron/root
         echo "Lên lịch FireWall"
     fi
 fi
