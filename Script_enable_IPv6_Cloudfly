@@ -1,0 +1,11 @@
+
+IPV6ADDR=Address IPv6
+IPV6_DEFAULTGW=Gateway
+
+echo "IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+IPV6ADDR=$IPV6ADDR/64
+IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+service network restart
+
+ping6 google.com -c4
