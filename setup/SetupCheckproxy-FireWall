@@ -1,5 +1,5 @@
+if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 if [ "$#" -eq 1 ]; then
-    # Lấy nội dung từ đối số đầu vào và ghi vào file dns.txt
     dns_content="$1"
     echo "$dns_content" > /root/dns.txt
 fi
@@ -23,3 +23,6 @@ fi
         echo "*/5 * * * * bash CheckliveProxy.sh" >> /var/spool/cron/root
         echo "Lên lịch CheckliveProxy"
     fi
+else
+    echo "Chỉ sử dụng cho khách Mua Tool RegProxy"
+fi
