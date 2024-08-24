@@ -1,3 +1,5 @@
+# Kiểm tra xem đường dẫn có tồn tại hay không
+if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 if [ "$#" -eq 1 ]; then
     # Lấy nội dung từ đối số đầu vào và ghi vào file dns.txt
     dns_content="$1"
@@ -12,3 +14,7 @@ else
     fi
 fi
 echo "Script đã hoàn tất."
+else
+    # Đường dẫn không tồn tại, in thông báo và kết thúc script
+    echo "Chỉ sử dụng cho khách Mua Tool RegProxy"
+fi
