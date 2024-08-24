@@ -1,6 +1,14 @@
 # Kiểm tra xem đường dẫn có tồn tại hay không
 if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
     # Đường dẫn tồn tại, tiến hành chạy mã
+    if systemctl is-enabled firewalld >/dev/null 2>&1; then
+        echo "Dịch vụ firewalld đã được cấu hình để khởi động cùng hệ thống."
+    else
+        echo "Dịch vụ firewalld chưa được cấu hình để khởi động cùng hệ thống."
+        echo "Cấu hình để khởi động cùng hệ thống..."
+        sudo systemctl enable firewalld
+    fi
+    
     # Kiểm tra xem Firewalld có đang hoạt động không
     if systemctl is-active --quiet firewalld; then
         echo "Firewalld đang hoạt động."
