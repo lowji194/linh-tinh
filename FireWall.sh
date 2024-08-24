@@ -17,6 +17,7 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 
     output=$(sudo netstat -tunapl)
     dns_name=$(<dns.txt)
+    country=$(<country.txt)
     whitehat_ip=$(curl -s "https://dns.google/resolve?name=$dns_name" | grep -oP '"data":"\K[^"]+' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
     ip_list=$(sudo firewall-cmd --list-rich-rules | sed -En 's/.*address="([^"]+)".*/\1/p' | grep -v "0.0.0.0/0")
     echo "$output" | awk '/ESTABLISHED/ {print $5}' | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | cut -d: -f1 | sort | uniq -c | while read count ip
@@ -25,7 +26,7 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
             url="https://freeipapi.com/api/json/$ip"
             json=$(curl -s "$url")
             country_code=$(echo "$json" | grep -Po '"countryCode":.*?[^\\]",' | cut -d'"' -f4)
-            if [ "$country_code" != "VN" ] && [ "$ip" != "$whitehat_ip" ]; then
+            if [ "$country_code" != "$country" ] && [ "$ip" != "$whitehat_ip" ]; then
                 sudo firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='$ip' reject" 2>/dev/null
                 echo "Đã chặn $ip - $country_code"
             fi
