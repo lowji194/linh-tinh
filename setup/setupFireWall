@@ -1,3 +1,4 @@
+echo "theloi.io.vn" > /root/dns.txt
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/FireWall.sh  && chmod +x FireWall.sh && sed -i 's/\r$//' FireWall.sh && bash FireWall.sh
 if [ ! -e /var/spool/cron/root ]; then
     echo "0 * * * * bash /root/FireWall.sh" > /var/spool/cron/root
@@ -6,3 +7,4 @@ else
         echo "0 * * * * bash /root/FireWall.sh" >> /var/spool/cron/root
     fi
 fi
+echo "Script đã hoàn tất."
