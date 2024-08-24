@@ -26,7 +26,7 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
             url="https://freeipapi.com/api/json/$ip"
             json=$(curl -s "$url")
             country_code=$(echo "$json" | grep -Po '"countryCode":.*?[^\\]",' | cut -d'"' -f4)
-            if [ "$country_code" != "$country" ] && [ "$ip" != "$whitehat_ip" ]; then
+            if [ "$country_code" != "$country" ] && [ "$ip" != "$whitehat_ip" ] || [ "$country" == "No" ] && [ "$ip" != "$whitehat_ip" ]; then
                 sudo firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='$ip' reject" 2>/dev/null
                 echo "Đã chặn $ip - $country_code"
             fi
