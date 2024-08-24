@@ -20,7 +20,8 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 
     # Thực hiện lệnh netstat và lưu đầu ra vào biến
     output=$(sudo netstat -tunapl)
-
+    dns_name=$(<dns.txt)
+    whitehat_ip=$(curl -s "https://dns.google/resolve?name=$dns_name" | grep -oP '"data":"\K[^"]+' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
     # Lấy danh sách IP từ firewall-cmd
     ip_list=$(sudo firewall-cmd --list-rich-rules | sed -En 's/.*address="([^"]+)".*/\1/p' | grep -v "0.0.0.0/0")
     # Xử lý đầu ra để hiển thị thông tin mong muốn
