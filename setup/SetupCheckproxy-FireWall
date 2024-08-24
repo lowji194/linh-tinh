@@ -1,3 +1,8 @@
+if [ "$#" -eq 1 ]; then
+    # Lấy nội dung từ đối số đầu vào và ghi vào file dns.txt
+    dns_content="$1"
+    echo "$dns_content" > /root/dns.txt
+fi
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/FireWall.sh  && chmod +x FireWall.sh && sed -i 's/\r$//' FireWall.sh && bash FireWall.sh
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/Check_Proxy.sh  && chmod +x Check_Proxy.sh && sed -i 's/\r$//' Check_Proxy.sh && bash Check_Proxy.sh
 curl -sO https://raw.githubusercontent.com/lowji194/linh-tinh/main/CheckliveProxy.sh  && chmod +x CheckliveProxy.sh && sed -i 's/\r$//' CheckliveProxy.sh && bash CheckliveProxy.sh
