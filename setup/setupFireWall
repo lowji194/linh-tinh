@@ -3,7 +3,6 @@ if [ "$#" -ge 1 ]; then
     dns_content=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     echo "$dns_content" > /root/dns.txt
 fi
-
 if [ "$#" -ge 2 ]; then
     country_code=$(echo "$2" | tr '[:upper:]' '[:lower:]')
     echo "$country_code" > /root/country.txt
