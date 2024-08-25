@@ -1,13 +1,17 @@
+# Đặt giá trị cho địa chỉ IPv6 và gateway
+IPV6ADDR="2001:db8::1"
+IPV6_DEFAULTGW="2001:db8::2"
 
-IPV6ADDR=Address IPv6
-IPV6_DEFAULTGW=Gateway
-
+# Xác định tên giao diện mạng
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 echo "IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 IPV6ADDR=$IPV6ADDR/64
-IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-${Eth}
+IPV6_DEFAULTGW=$IPV6_DEFAULTGW" | sudo tee /etc/sysconfig/network-scripts/ifcfg-${Eth}
 
-service NetworkManager restart
+# Khởi động lại dịch vụ mạng
+sudo systemctl restart NetworkManager
 sleep 3
+
+# Kiểm tra kết nối mạng IPv6
 ping6 google.com -c4
