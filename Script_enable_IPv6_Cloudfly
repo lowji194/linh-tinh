@@ -2,10 +2,11 @@
 IPV6ADDR=Address IPv6
 IPV6_DEFAULTGW=Gateway
 
+Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 echo "IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 IPV6ADDR=$IPV6ADDR/64
-IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-${Eth}
 
 service NetworkManager restart
 sleep 3
