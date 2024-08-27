@@ -11,7 +11,11 @@ IPV6ADDR=$IPV6ADDR/64
 IPV6_DEFAULTGW=$IPV6_DEFAULTGW" | sudo tee /etc/sysconfig/network-scripts/ifcfg-${Eth}
 
 # Khởi động lại dịch vụ mạng
-sudo systemctl restart NetworkManager
+if [ -f /etc/almalinux-release ]; then
+    sudo systemctl restart NetworkManager
+else
+    service network restart
+fi
 sleep 3
 
 # Kiểm tra kết nối mạng IPv6
