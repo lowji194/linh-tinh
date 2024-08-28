@@ -5,10 +5,14 @@ IPV6_DEFAULTGW="2001:db8::2"
 # Xác định tên giao diện mạng
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 
-echo "IPV6_FAILURE_FATAL=no
+# Kiểm tra nếu file đã có dòng "Write=true"
+if ! grep -q "Write=true" /etc/sysconfig/network-scripts/ifcfg-${Eth}; then
+    echo "Write=true
+IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 IPV6ADDR=$IPV6ADDR/64
-IPV6_DEFAULTGW=$IPV6_DEFAULTGW" | sudo tee /etc/sysconfig/network-scripts/ifcfg-${Eth}
+IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-${Eth}
+fi
 
 # Khởi động lại dịch vụ mạng
 if [ -f /etc/almalinux-release ]; then
