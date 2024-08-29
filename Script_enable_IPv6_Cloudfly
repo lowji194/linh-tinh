@@ -2,15 +2,17 @@
 IPV6ADDR="2001:db8::1"
 IPV6_DEFAULTGW="2001:db8::2"
 
-# Xác định tên giao diện mạng
-Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 
-# Kiểm tra nếu file đã có dòng "Write=true"
+Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
+if [[ ! "$IPV6ADDR" =~ /64$ ]]; then
+    IPV6ADDR="${IPV6ADDR}/64"
+fi
+
 if ! grep -q "Write=true" /etc/sysconfig/network-scripts/ifcfg-${Eth}; then
     echo "Write=true
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
-IPV6ADDR=$IPV6ADDR/64
+IPV6ADDR=$IPV6ADDR
 IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-${Eth}
 fi
 
