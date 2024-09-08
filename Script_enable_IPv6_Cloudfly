@@ -10,13 +10,11 @@ fi
 
 CONFIG_FILE="/etc/sysconfig/network-scripts/ifcfg-${Eth}"
 
-# Kiểm tra và chỉnh sửa nội dung file cấu hình
 if grep -q "Write=true" "$CONFIG_FILE"; then
     # Thay thế các dòng IPV6ADDR và IPV6_DEFAULTGW với giá trị mới
     sed -i "s|^IPV6ADDR=.*|IPV6ADDR=$IPV6ADDR|" "$CONFIG_FILE"
     sed -i "s|^IPV6_DEFAULTGW=.*|IPV6_DEFAULTGW=$IPV6_DEFAULTGW|" "$CONFIG_FILE"
 else
-    # Thêm mới các cấu hình nếu chưa có
     echo "Write=true
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
