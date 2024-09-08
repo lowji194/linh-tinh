@@ -3,18 +3,25 @@
 IPV6ADDR="2407:5b40:0:b19::4b"
 IPV6_DEFAULTGW=$(echo "$IPV6ADDR" | sed 's/::[a-fA-F0-9]*/::1/')
 
-
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
 if [[ ! "$IPV6ADDR" =~ /64$ ]]; then
     IPV6ADDR="${IPV6ADDR}/64"
 fi
 
-if ! grep -q "Write=true" /etc/sysconfig/network-scripts/ifcfg-${Eth}; then
+CONFIG_FILE="/etc/sysconfig/network-scripts/ifcfg-${Eth}"
+
+# Kiểm tra và chỉnh sửa nội dung file cấu hình
+if grep -q "Write=true" "$CONFIG_FILE"; then
+    # Thay thế các dòng IPV6ADDR và IPV6_DEFAULTGW với giá trị mới
+    sed -i "s|^IPV6ADDR=.*|IPV6ADDR=$IPV6ADDR|" "$CONFIG_FILE"
+    sed -i "s|^IPV6_DEFAULTGW=.*|IPV6_DEFAULTGW=$IPV6_DEFAULTGW|" "$CONFIG_FILE"
+else
+    # Thêm mới các cấu hình nếu chưa có
     echo "Write=true
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
 IPV6ADDR=$IPV6ADDR
-IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> /etc/sysconfig/network-scripts/ifcfg-${Eth}
+IPV6_DEFAULTGW=$IPV6_DEFAULTGW" >> "$CONFIG_FILE"
 fi
 
 # Khởi động lại dịch vụ mạng
