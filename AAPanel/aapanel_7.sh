@@ -1679,10 +1679,12 @@ Set_Bt_Panel() {
     chmod -R 700 /www/server/panel/pyenv/bin
     # /www/server/panel/pyenv/bin/pip install cachelib
     /www/server/panel/pyenv/bin/pip install python-telegram-bot==20.3
-	password=${2:-$(cat /dev/urandom | head -n 16 | md5sum | head -c 8)}
-    if [ "$PANEL_PASSWORD" ];then
-        password=$PANEL_PASSWORD
-    fi
+	password=$(cat /dev/urandom | head -n 16 | md5sum | head -c 8)
+	if [ -n "$2" ]; then
+	    password=$2
+	elif [ "$PANEL_PASSWORD" ]; then
+	    password=$PANEL_PASSWORD
+	fi
     sleep 1
     admin_auth="/www/server/panel/data/admin_path.pl"
     if [ ! -f ${admin_auth} ]; then
@@ -1728,10 +1730,12 @@ Set_Bt_Panel() {
     /etc/init.d/bt start
     $python_bin -m py_compile tools.py
     $python_bin tools.py username
-	username=${1:-$(python3 tools.py panel "${password}")}
-    if [ "$PANEL_USER" ];then
-        username=$PANEL_USER
-    fi
+	username=$(python3 tools.py panel "${password}")
+	if [ -n "$1" ]; then
+	    username=$1
+	elif [ "$PANEL_USER" ]; then
+	    username=$PANEL_USER
+	fi
     cd ~
     echo "${password}" >${setup_path}/server/panel/default.pl
     chmod 600 ${setup_path}/server/panel/default.pl
