@@ -1,1 +1,2 @@
 bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/AAPanel/aapanel_7.sh) "user" "pass"
+bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/AAPanel/Active7.sh)
