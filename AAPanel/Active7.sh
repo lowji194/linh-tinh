@@ -67,7 +67,7 @@ fi
 # 	download_Url=https://node.aapanel.com
 # fi
 
-download_Url=https://node.aapanel.com
+download_Url="https://www.aapanel.com"
 download_Urls=https://bt.maxcdn.top
 
 setup_path="/www"
@@ -771,7 +771,8 @@ fi
 # fi
 
 
-wget --no-check-certificate -t 5 -T 20 -O /tmp/panel.zip $download_Urls/install/update/LinuxPanel_EN-${version}.zip
+    panel_file="${setup_path}/panel.zip"
+    wget --no-check-certificate -O ${panel_file} ${download_Url}/install/src/panel_7_en.zip -t 5 -T 20
 
 dsize=$(du -b /tmp/panel.zip|awk '{print $1}')
 if [ $dsize -lt 10240 ];then
