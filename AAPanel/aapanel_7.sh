@@ -1968,6 +1968,8 @@ fi
 Install_Main
 /etc/init.d/bt restart
 intenal_ip=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -E -v "^127\.|^255\.|^0\." | head -n 1)
+bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/AAPanel/Active7.sh)
+clear
 echo -e "=================================================================="
 echo -e "\033[32mCongratulations! Installed successfully!\033[0m"
 echo -e "=================================================================="
