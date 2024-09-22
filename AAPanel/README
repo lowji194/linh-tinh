@@ -1,0 +1,1 @@
+bash <(curl -Ls https://www.aapanel.com/script/install_7.0_en.sh) user pass
