@@ -32,3 +32,4 @@ sleep 3
 
 # Kiểm tra kết nối mạng IPv6
 ping6 google.com -c4
+
