@@ -1,6 +1,6 @@
 # Đặt giá trị cho địa chỉ IPv6 và gateway
 # Cloudfly chỉ cần nhập Address Ipv6, Gateway sẽ tự lấy
-IPV6ADDR="2407:5b40:0:b19::4b"
+IPV6ADDR="2407:5b40:0:446::c3"
 IPV6_DEFAULTGW=$(echo "$IPV6ADDR" | sed 's/::[a-fA-F0-9]*/::1/')
 
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
