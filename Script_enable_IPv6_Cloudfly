@@ -1,15 +1,25 @@
-# Đặt giá trị cho địa chỉ IPv6 và gateway
-# Cloudfly chỉ cần nhập Address Ipv6, Gateway sẽ tự lấy
-IPV6ADDR="2407:5b40:0:446::c3"
+#!/bin/bash
+
+# Đặt giá trị IPV6ADDR từ tham số đầu vào
+if [ -z "$1" ]; then
+    echo "Vui lòng cung cấp địa chỉ IPv6 làm tham số đầu vào."
+    exit 1
+fi
+
+IPV6ADDR="$1"
 IPV6_DEFAULTGW=$(echo "$IPV6ADDR" | sed 's/::[a-fA-F0-9]*/::1/')
 
+# Lấy tên interface mạng
 Eth=$(ip addr show | grep -E '^2:' | sed 's/^[0-9]*: \(.*\):.*/\1/')
+
+# Thêm /64 nếu chưa có
 if [[ ! "$IPV6ADDR" =~ /64$ ]]; then
     IPV6ADDR="${IPV6ADDR}/64"
 fi
 
 CONFIG_FILE="/etc/sysconfig/network-scripts/ifcfg-${Eth}"
 
+# Cập nhật hoặc thêm cấu hình vào tệp
 if grep -q "Write=true" "$CONFIG_FILE"; then
     # Thay thế các dòng IPV6ADDR và IPV6_DEFAULTGW với giá trị mới
     sed -i "s|^IPV6ADDR=.*|IPV6ADDR=$IPV6ADDR|" "$CONFIG_FILE"
@@ -32,4 +42,3 @@ sleep 3
 
 # Kiểm tra kết nối mạng IPv6
 ping6 google.com -c4
-
