@@ -63,6 +63,7 @@ sleep 3
 
 # Kiểm tra kết nối mạng IPv6
 ping6 google.com -c4
+echo " "
 
 IP=$(curl -6 -s icanhazip.com)
 if [ -n "$IP" ]; then
