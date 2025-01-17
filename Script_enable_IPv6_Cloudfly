@@ -42,3 +42,11 @@ sleep 3
 
 # Kiểm tra kết nối mạng IPv6
 ping6 google.com -c4
+
+IP=$(curl -6 -s icanhazip.com)
+if [ -n "$IP" ]; then
+    echo "Bật IPv6 thành công: $IP" 
+else
+    echo "Thất bại kiểm tra lại IP, VPS hoặc liên hệ Cloudfly" 
+fi
+
