@@ -127,5 +127,5 @@ EOF
 
     echo "Rotate IP Success"
 else
-    echo "Chỉ sử dụng cho khách Mua Tool RegProxy"
+    echo "Only for customers who purchased the RegProxy tool"
 fi
