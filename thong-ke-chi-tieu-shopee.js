@@ -77,7 +77,7 @@ function hienThiThongBao(tongDonHang) {
     setTimeout(() => {
         thongBao.style.opacity = "0";
         setTimeout(() => { thongBao.remove(); }, 500);
-    }, 3000);
+    }, 2000);
 }
 
 function hienThiPopup() {
