@@ -6,7 +6,7 @@ var tongSanPhamDaMua = 0;
 var trangThaiDonHangConKhong = true;
 var offset = 0;
 var si = 20;
-
+document.title = 'Bắt đầu kiểm tra tiêu dùng';
 function xemBaoCaoThongKe() {
     var orders = [];
     var xhttp = new XMLHttpRequest();
@@ -83,12 +83,12 @@ function hienThiThongBao(tongDonHang) {
 function hienThiPopup() {
     let popup = document.createElement("div");
     popup.innerHTML = `
-        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); text-align: center; font-family: Arial, sans-serif;">
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); text-align: center; font-family: Arial, sans-serif;">
             <h2 style="color: #ff5722;">Báo Cáo Thống Kê Shopee</h2>
             <p><b>Số tiền đã tiêu:</b> <span style="color: #2196F3; font-size: 18px;">${pxgPrice(tongtienhang)} vnđ</span></p>
             <p><b>Tổng đơn hàng đã giao:</b> <span style="color: #4CAF50; font-size: 18px;">${pxgPrice(tongDonHang)} đơn hàng</span></p>
             <p><b>Số lượng sản phẩm đã đặt:</b> <span style="color: #E91E63; font-size: 18px;">${pxgPrice(tongSanPhamDaMua)} sản phẩm</span></p>
-            <p><b>Tổng tiền tiết kiệm từ Voucher, Mã giảm giá:</b> <span style="color: #FF9800; font-size: 18px;">${pxgPrice(tongTienTietKiem)} vnđ</span></p>
+            <p><b>Tiền tiết kiệm được từ Voucher, Mã giảm giá:</b> <span style="color: #FF9800; font-size: 18px;">${pxgPrice(tongTienTietKiem)} vnđ</span></p>
             <button style="margin-top: 15px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="this.parentElement.remove()">Đóng</button>
         </div>
     `;
