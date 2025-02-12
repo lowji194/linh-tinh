@@ -88,7 +88,7 @@ function hienThiPopup() {
             <p><b>Số tiền đã tiêu:</b> <span style="color: #2196F3; font-size: 18px;">${pxgPrice(tongtienhang)} vnđ</span></p>
             <p><b>Tổng đơn hàng đã giao:</b> <span style="color: #4CAF50; font-size: 18px;">${pxgPrice(tongDonHang)} đơn hàng</span></p>
             <p><b>Số lượng sản phẩm đã đặt:</b> <span style="color: #E91E63; font-size: 18px;">${pxgPrice(tongSanPhamDaMua)} sản phẩm</span></p>
-            <p><b>Tổng tiền tiết kiệm:</b> <span style="color: #FF9800; font-size: 18px;">${pxgPrice(tongTienTietKiem)} vnđ</span></p>
+            <p><b>Tổng tiền tiết kiệm từ Voucher, Mã giảm giá:</b> <span style="color: #FF9800; font-size: 18px;">${pxgPrice(tongTienTietKiem)} vnđ</span></p>
             <button style="margin-top: 15px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="this.parentElement.remove()">Đóng</button>
         </div>
     `;
