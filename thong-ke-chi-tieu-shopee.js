@@ -84,7 +84,8 @@ function hienThiPopup() {
     let popup = document.createElement("div");
     popup.innerHTML = `
         <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); text-align: center; font-family: Arial, sans-serif;">
-            <h2 style="color: #ff5722;">Báo Cáo Thống Kê Shopee</h2>
+            <h1 style="color: #2196F3;"><a href="https://your-link-here.com" style="text-decoration: none; color: inherit;">Code By Nguyễn Thế Lợi</a></h1>
+            <h2 style="color: #ff5722;">Thống Kê Shopee</h2>
             <p><b>Số tiền đã tiêu:</b> <span style="color: #2196F3; font-size: 18px;">${pxgPrice(tongtienhang)} vnđ</span></p>
             <p><b>Tổng đơn hàng đã giao:</b> <span style="color: #4CAF50; font-size: 18px;">${pxgPrice(tongDonHang)} đơn hàng</span></p>
             <p><b>Số lượng sản phẩm đã đặt:</b> <span style="color: #E91E63; font-size: 18px;">${pxgPrice(tongSanPhamDaMua)} sản phẩm</span></p>
