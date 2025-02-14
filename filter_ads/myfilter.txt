@@ -8,3 +8,5 @@
 ||business-api.tiktok.com^
 ||appmetrica.yandex.ru^
 ||metrika.yandex.ru^
+/pagead.js$domain=d3ward.github.io
+/widget/ads.
