@@ -1,0 +1,4 @@
+||ads-api.twitter.com^
+||log.fc.yahoo.com^
+||gemini.yahoo.com^
+||adtech.yahooinc.com^
