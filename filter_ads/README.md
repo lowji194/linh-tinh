@@ -1,4 +1,4 @@
-# **Bộ Lọc Quảng Cáo By Lợi Nguyễn** 🔥
+#🔥 **Bộ Lọc Quảng Cáo By Lợi Nguyễn** 🔥
 
 Đây là bộ lọc quảng cáo nâng cao được phát triển bởi **Nguyễn Thế Lợi**. Bộ lọc này được thiết kế để giúp chặn quảng cáo và cải thiện trải nghiệm duyệt web của bạn.
 
@@ -21,8 +21,8 @@ Bộ lọc này có thể được sử dụng trên các trình duyệt hỗ tr
 
 ### 1. **Cài Đặt uBlock Origin hoặc AdGuard**
 
-- **uBlock Origin**: Cài đặt từ [Chrome Web Store](https://chrome.google.com/webstore/detail/ublock-origin) hoặc [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)
-- **AdGuard**: Tải xuống từ [AdGuard Official](https://adguard.com)
+- **uBlock Origin**: Cài đặt từ [Chrome Web Store](https://chromewebstore.google.com/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm) hoặc [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/ublock-origin/)
+- **AdGuard**: Cài đặt từ [Chrome Web Store](https://chromewebstore.google.com/detail/adguard-adblocker/bgnkhhnnamicmpeenaelnjfhikgbkllg) hoặc [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/adguard-adblocker/)
 
 ### 2. **Thêm Bộ Lọc vào uBlock Origin hoặc AdGuard**
 
