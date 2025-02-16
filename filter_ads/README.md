@@ -67,3 +67,6 @@ Dự án này được phát hành dưới **Giấy phép MIT**. Bạn có thể
 ### **Ảnh Mẫu**
 
 ![Logo](https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/filter_ads/sample_logo.png)
+
+## Danh sách Download URL:
+- [https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/README.md](https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/README.md)
