@@ -44,7 +44,6 @@ Bộ lọc này có thể được sử dụng trên các trình duyệt hỗ tr
     https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/Filter_ADS_P4.txt
     https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/Filter_ADS_P5.txt
     https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/Filter_ADS_P6.txt
-    https://raw.githubusercontent.com/lowji194/linh-tinh/main/filter_ads/Filer_Path/README.md
 
 
 ### 3. **Kích Hoạt Bộ Lọc**
