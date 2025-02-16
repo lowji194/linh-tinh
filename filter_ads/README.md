@@ -6,7 +6,6 @@
 
 ## 📅 **Thông Tin Cập Nhật**
 
-- **Cập nhật mới nhất**: 16-02-2025
 - **Website**: [Lowji194 Website](https://lowji194.github.io)
 - **Dành cho**: uBlock Origin / AdGuard
 - **Tác giả**: Nguyễn Thế Lợi
