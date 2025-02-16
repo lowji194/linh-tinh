@@ -6,13 +6,12 @@
 
 ## 📅 **Thông Tin Cập Nhật**
 
-- **Website**: <a href="https://lowji194.github.io" target="_blank">Lowji194 Website</a>
+- **Website**: [Lowji194 Website](https://lowji194.github.io)
 - **Dành cho**: uBlock Origin / AdGuard
 - **Tác giả**: Nguyễn Thế Lợi
 - **Mô tả**: Bộ lọc chặn quảng cáo
 - **SĐT**: 0963 159 294
-- **Facebook**: <a href="https://www.facebook.com/Lowji194/" target="_blank">Lowji194 trên Facebook</a>
-
+- **Facebook**: [Lowji194 trên Facebook](https://www.facebook.com/Lowji194/)
 
 ---
 
