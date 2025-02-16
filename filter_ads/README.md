@@ -63,7 +63,3 @@ Nếu bạn gặp phải bất kỳ vấn đề nào hoặc muốn đóng góp v
 Dự án này được phát hành dưới **Giấy phép MIT**. Bạn có thể tự do sử dụng, thay đổi, và phân phối mã nguồn dự án này với điều kiện tuân theo giấy phép.
 
 ---
-
-### **Ảnh Mẫu**
-
-![Logo](https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/filter_ads/sample_logo.png)
