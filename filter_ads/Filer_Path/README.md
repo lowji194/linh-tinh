@@ -1,1 +1,1 @@
-      [Danh sách bộ lọc]
+      Danh sách bộ lọc
