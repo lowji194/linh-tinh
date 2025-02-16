@@ -5,3 +5,4 @@ https://cdn.iblockads.net/premium/ntloi3944.iblockads.txt
 https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/filter_ads/myfilter.txt
 https://raw.githubusercontent.com/nmtrung/FMSF-2.0/refs/heads/master/fmsf_2.0.txt
 https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts
+https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
