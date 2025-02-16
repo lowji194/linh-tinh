@@ -12,5 +12,4 @@ Khi bạn sử dụng proxy, thay đổi mã quốc gia `VN` bằng mã quốc g
 ### 4. Lệnh cài đặt Firewall
 Chạy lệnh sau để cài đặt và cấu hình Firewall với DDNS và proxy:
 
-```bash
-bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/main/setup/setupFireWall) "google.com" "VN"
+    bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/main/setup/setupFireWall) "google.com" "VN"
