@@ -14,7 +14,7 @@ Chạy lệnh sau để cài đặt và cấu hình Firewall với DDNS và prox
 
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/main/setup/setupFireWall) "google.com" "VN"
-
+``
 
 ### Giải thích:
 - **Tiêu đề rõ ràng**: Các tiêu đề được sử dụng để phân chia từng phần hướng dẫn giúp người đọc dễ theo dõi.
