@@ -1,4 +1,4 @@
-#🔥 **Bộ Lọc Quảng Cáo By Lợi Nguyễn** 🔥
+# **🔥Bộ Lọc Quảng Cáo By Lợi Nguyễn🔥**
 
 Đây là bộ lọc quảng cáo nâng cao được phát triển bởi **Nguyễn Thế Lợi**. Bộ lọc này được thiết kế để giúp chặn quảng cáo và cải thiện trải nghiệm duyệt web của bạn.
 
