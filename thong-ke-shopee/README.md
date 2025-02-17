@@ -26,7 +26,7 @@
 
 2. Dán vào bảng điều khiển (Console) và nhấn Enter.
 
-## Cách 1: Thêm Bookmark vào Trình duyệt
+## Cách 2: Thêm Bookmark vào Trình duyệt
 ### Bước 1: Tạo Bookmark
 
 1. Mở trình duyệt (Chrome, Firefox, Edge, v.v...).
@@ -54,20 +54,5 @@
 ### Bước 3: Chạy Đoạn Mã
 
 1. Để chạy đoạn mã JavaScript, chỉ cần nhấn vào bookmark mà bạn vừa tạo.
-2. Trình duyệt sẽ tự động tải và thực thi mã JavaScript từ GitHub.
-
-### Bước 4: Kết Quả
-
-- Đoạn mã sẽ tải mã JavaScript từ GitHub và thực thi nó.
-- Nếu có lỗi xảy ra, thông báo lỗi sẽ được in ra trong bảng điều khiển (Console) của trình duyệt.
-
-## Lỗi và Khắc Phục
-
-- **Lỗi tải tệp**: Nếu có lỗi khi tải tệp, hãy kiểm tra kết nối mạng hoặc thử lại sau.
-- **Lỗi thực thi mã**: Nếu có vấn đề với mã JavaScript, hãy kiểm tra lại mã trên GitHub hoặc liên hệ với người phát triển.
-
-## Giới Thiệu
-
-Đoạn mã này giúp bạn dễ dàng tải và chạy các tệp JavaScript từ GitHub chỉ bằng cách nhấn vào một bookmark mà không cần phải mở bảng điều khiển.
 
 Chúc bạn thành công!
