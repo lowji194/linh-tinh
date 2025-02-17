@@ -2,7 +2,7 @@
 
 ## Mô Tả
 
-Đoạn mã JavaScript dưới đây sẽ tải một tệp từ GitHub và thực thi mã JavaScript được chứa trong tệp đó thông qua bảng điều khiển (Console) của trình duyệt.
+Đoạn mã thống kê tổng số tiền đã chi tiêu, tổng số đơn hàng bạn đã mua trên shopee
 
 ## Hướng Dẫn Sử Dụng
 
