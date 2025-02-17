@@ -55,4 +55,4 @@
 
 1. Để chạy đoạn mã JavaScript, chỉ cần nhấn vào bookmark mà bạn vừa tạo.
 
-Chúc bạn thành công!
+# Chúc bạn thành công!
