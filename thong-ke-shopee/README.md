@@ -6,6 +6,7 @@
 
 ## Hướng Dẫn Sử Dụng
 
+## Cách 1: Chạy mã qua bảng điều khiển (Console)
 ### Bước 1: Mở Bảng Console
 
 1. Mở trình duyệt (Chrome, Firefox, Edge, v.v...).
