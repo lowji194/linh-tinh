@@ -80,8 +80,3 @@ Sau khi cài đặt và kích hoạt **aaPanel**, bạn có thể cấu hình th
 - **Firewall**: Nếu bạn gặp sự cố khi truy cập vào aaPanel, hãy kiểm tra cấu hình firewall của máy chủ, đảm bảo rằng cổng `8888` mở cho kết nối từ bên ngoài.
 - **Đảm bảo kết nối internet ổn định**: Quá trình cài đặt và kích hoạt có thể yêu cầu tải các gói từ internet, vì vậy hãy chắc chắn máy chủ của bạn có kết nối internet tốt.
 
-## Hỗ trợ
-
-- Nếu bạn gặp bất kỳ vấn đề gì trong quá trình cài đặt hoặc sử dụng aaPanel, bạn có thể tham gia vào cộng đồng hỗ trợ của aaPanel hoặc mở vấn đề trên [GitHub repository](https://github.com/aaPanel/aaPanel).
-
-Chúc bạn thành công với việc cài đặt và sử dụng aaPanel!
