@@ -14,3 +14,5 @@ Ví dụ: [https://freeipapi.com/api/json/1.32.239.255](https://freeipapi.com/ap
 Chạy lệnh sau để cài đặt và cấu hình Firewall với DDNS và proxy:
    ```bash
     bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/main/setup/setupFireWall) "google.com" "VN"
+   ```
+xin chào
