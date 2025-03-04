@@ -61,4 +61,4 @@ fi
 service NetworkManager restart
 
 fi
-echo 'Da tao IPV6 thanh cong!'
+echo 'Cấu hình IPv6 thành công!' > /root/log.txt
