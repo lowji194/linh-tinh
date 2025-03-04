@@ -12,6 +12,6 @@ Ví dụ: [https://freeipapi.com/api/json/1.32.239.255](https://freeipapi.com/ap
 
 ### 4. Sau khi cài đặt hoàn tất truy cập vps để kiểm tra Log
    ```bash
-   IPVPS:9999
+   IPVPS_cuaban:9999
    ```
    
