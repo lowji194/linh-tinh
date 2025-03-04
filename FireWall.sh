@@ -7,12 +7,19 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
 
     # Lấy danh sách các IP đã bị chặn trong iptables
     ip_list=$(sudo iptables -L INPUT -v -n | grep REJECT | awk '{print $8}')
+
     echo "$output" | awk '/ESTABLISHED/ {print $5}' | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | cut -d: -f1 | sort | uniq -c | while read count ip; do
+        if [ -z "$whitehat_ip" ] || [ "$ip" == "$whitehat_ip" ]; then
+            echo "Bỏ qua IP: $ip vì là Whitehat IP hoặc Whitehat IP trống"
+            continue
+        fi
+
         if ! echo "$ip_list" | grep -q "$ip"; then
             url="https://freeipapi.com/api/json/$ip"
             json=$(curl -s "$url")
             country_code=$(echo "$json" | grep -Po '"countryCode":.*?[^\\]",' | cut -d'"' -f4 | tr '[:upper:]' '[:lower:]')
-            if [ "$country_code" != "$country" ] && [ "$ip" != "$whitehat_ip" ] || [ "$country" == "no" ] && [ "$ip" != "$whitehat_ip" ]; then
+
+            if [ "$country_code" != "$country" ] || ([ "$country" == "no" ] && [ "$ip" != "$whitehat_ip" ]); then
                 sudo iptables -A INPUT -s "$ip" -j REJECT
                 echo "Đã chặn $ip - $country_code"
             fi
