@@ -11,5 +11,5 @@ Khi bạn sử dụng proxy, thay đổi mã quốc gia `VN` bằng mã quốc g
 Ví dụ: [https://freeipapi.com/api/json/1.32.239.255](https://freeipapi.com/api/json/1.32.239.255)
 
 ### 4. Sau khi cài đặt hoàn tất truy cập vps để kiểm tra Log
-   `IPVPS:9999`
+   ```IPVPS:9999```
    
