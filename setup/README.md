@@ -10,8 +10,6 @@
 Khi bạn sử dụng proxy, thay đổi mã quốc gia `VN` bằng mã quốc gia của bạn (ví dụ: `US`, `DE`, v.v.) để tránh việc bị chặn.
 Ví dụ: [https://freeipapi.com/api/json/1.32.239.255](https://freeipapi.com/api/json/1.32.239.255)
 
-### 4. Lệnh cài đặt Firewall
-Chạy lệnh sau để cài đặt và cấu hình Firewall với DDNS và proxy:
-   ```bash
-    bash <(curl -Ls https://raw.githubusercontent.com/lowji194/linh-tinh/main/setup/setupFireWall) "google.com" "VN"
-   ```
+### 4. Sau khi cài đặt hoàn tất truy cập vps để kiểm tra Log
+   `IPVPS:9999`
+   
