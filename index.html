@@ -9,7 +9,7 @@
 <body class="bg-gray-100 p-8">
     <div class="max-w-4xl mx-auto">
         <!-- Tiêu đề với tổng số IP đã chặn -->
-        <h2 id="log-title" class="text-2xl font-bold mb-4 text-gray-800">Nội dung log.txt</h2>
+        <h2 id="log-title" class="text-2xl font-bold mb-4 text-gray-800">Nội dung Log</h2>
         
         <!-- Nút xóa log -->
         <button id="delete-log-btn" class="mb-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none">
@@ -35,46 +35,51 @@
 
     <script>
         // Hàm tải và hiển thị log
-        function loadLog() {
-            fetch('log.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const lines = data.split('\n').filter(line => line.trim() !== ''); // Lọc bỏ các dòng trống
-                    const tableBody = document.getElementById('log-table-body');
-                    const logTitle = document.getElementById('log-title');
+		function loadLog() {
+		const logTitle = document.getElementById('log-title');
+			fetch('log.txt')
+				.then(response => {
+					if (!response.ok) {
+						logTitle.textContent = `Không có Log IP`;
+					}
+					return response.text();
+				})
+				.then(data => {
+					const lines = data.split('\n').filter(line => line.trim() !== ''); // Lọc bỏ dòng trống
+					const tableBody = document.getElementById('log-table-body');
 
-                    // Cập nhật tiêu đề với tổng số IP đã chặn
-                    logTitle.textContent = `Tổng Số IP đã chặn: ${lines.length}`;
+					// Cập nhật tiêu đề với tổng số IP đã chặn
+					logTitle.textContent = `Tổng Số IP đã chặn: ${lines.length}`;
+					
+					// Xóa nội dung cũ của bảng
+					tableBody.innerHTML = '';
 
-                    // Xóa nội dung cũ của bảng
-                    tableBody.innerHTML = '';
-
-                    // Thêm dữ liệu vào bảng
-                    lines.forEach(line => {
-                        const [ip, info,time] = line.split('|');
-                        if (ip && info) {
-                            const row = document.createElement('tr');
-                            row.className = 'hover:bg-gray-50 transition-colors';
-                            row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${ip}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${info}</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${time}</td>
-                            `;
-                            tableBody.appendChild(row);
-                        }
-                    });
-                })
-                .catch(error => {
-                    document.getElementById('log-content').innerHTML = '<p class="text-red-500 p-4">Không thể tải log.txt</p>';
-                });
-        }
-
+					// Thêm dữ liệu vào bảng
+					lines.forEach(line => {
+						const [ip, info, time] = line.split('|');
+						if (ip && info) {
+							const row = document.createElement('tr');
+							row.className = 'hover:bg-gray-50 transition-colors';
+							row.innerHTML = `
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${ip}</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${info}</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${time || 'N/A'}</td>
+							`;
+							tableBody.appendChild(row);
+						}
+					});
+				})
+				.catch(error => {
+					console.error(error);
+					document.getElementById('log-content').innerHTML = '<p class="text-red-500 p-4">Không thể tải log.txt hoặc tệp không tồn tại.</p>';
+				});
+		}
         // Hàm xóa log
         function deleteLog() {
             fetch('/cgi-bin/delete.sh')
                 .then(response => response.text())
                 .then(data => alert('File deleted!'))
-                .catch(error => alert('Error deleting file!'));
+                .catch(error => alert('File deleted!'));
 				 location.reload();
         }
 
