@@ -1,4 +1,4 @@
-if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
+if grep -q "Nguyễn Thế Lợi" /etc/motd; then
 
     output=$(sudo netstat -tunapl)
     dns_name=$(<dns.txt)
@@ -32,5 +32,5 @@ if [[ -e "/usr/local/etc/LowjiConfig" ]]; then
     sudo iptables-save > /etc/sysconfig/iptables
     echo "Hoàn tất chặn IP lạ"
 else
-    echo "Chỉ sử dụng cho khách Mua Tool RegProxy"
+    echo "Chỉ sử dụng cho khách Mua Tool RegProxy" > /root/log.txt
 fi
