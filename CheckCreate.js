@@ -1,17 +1,13 @@
-async function checkCreate(uid) {
+async function checkCreate(uid = '4') {
     const api = 'https://www.facebook.com/api/graphql/';
 
     const data = new URLSearchParams({
-        'av': '0', // Thay thế bằng giá trị thực tế nếu có
-        'dpr': '1',
-        '__comet_req': '15',
         'fb_dtsg': fb_dtsg,
         'fb_api_caller_class': 'RelayModern',
         'fb_api_req_friendly_name': 'MarketplaceSellerProfileDialogQuery',
         'variables': JSON.stringify({
             "isCOBMOB": false,
             "isSelfProfile": false,
-            "productID": "944605867143682",
             "scale": 1,
             "sellerId": uid,
             "useContextualViewHeader": true
@@ -26,10 +22,10 @@ async function checkCreate(uid) {
             body: data
         });
 
-        const responseText = await response.text(); // Đọc phản hồi dưới dạng văn bản
-        console.log(responseText); // In ra phản hồi thô
+        const responseText = await response.text(); /
+        console.log(responseText);
 
-        const responseJson = JSON.parse(responseText); // Cố gắng phân tích JSON
+        const responseJson = JSON.parse(responseText);
         const user = responseJson.data.user;
         const items = user.items;
         const nodes = items.nodes;
