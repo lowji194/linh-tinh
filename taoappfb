@@ -1,0 +1,115 @@
+const user = require(["CurrentUserInitialData"]).USER_ID;
+const fb_dtsg = require(["DTSGInitData"]).token;
+
+const idbm = "4481031025350636"; // ID Business Manager
+const idapp = "1122028503152125"; // ID App chính
+const solan = 1; // Số lần chạy
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Hàm tạo app test
+async function createTestApp() {
+  const url = `https://developers.facebook.com/apps/async/create/?app_creation_source=dfc_test_app_creation&app_owner_type=1&create_from_business_id=${idbm}&platform_category=business`;
+  const body = `jazoest=25412&fb_dtsg=${fb_dtsg}&create_test_app=1&parent_app_id=${idapp}&basic_name=Bm%20nlm%20-%20Test1&__aaid=0&__bid=${idbm}&__user=${user}&__a=1&__req=q&__hs=20295.BP%3Adevsite_pkg.2.0...0&dpr=1&__ccg=EXCELLENT&__rev=1025187666&__s=ri550j%3Apvs6ot%3Aanui9o&__hsi=7531412242586751691&__dyn=...&lsd=gsDBpxO9xRAUK25GpSD0Ka&qpl_active_flow_ids=890780636`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "x-asbd-id": "359341",
+      "x-fb-lsd": "gsDBpxO9xRAUK25GpSD0Ka",
+      "x-fb-qpl-active-flows": "890780636"
+    },
+    referrer: `https://developers.facebook.com/apps/${idapp}/dashboard/?business_id=${idbm}`,
+    body,
+    mode: "cors",
+    credentials: "include"
+  });
+
+  const raw = await res.text();
+  const jsonText = raw.replace(/^for\s*\(\s*;;\s*\);\s*/, "");
+
+  try {
+    const data = JSON.parse(jsonText);
+    return data?.payload?.extra?.newApp?.id || null;
+  } catch (e) {
+    console.error("❌ Lỗi phân tích JSON:", e);
+    return null;
+  }
+}
+
+// Hàm gắn WhatsApp cho app
+async function attachWhatsApp(appId) {
+  const url = `https://developers.facebook.com/apps/${appId}/async/products/add/`;
+  const body = `product_route=whatsapp-business&__aaid=0&__bid=${idbm}&__user=${user}&__a=1&__req=l&__hs=20295.BP%3Adevsite_pkg.2.0...0&dpr=1&__ccg=EXCELLENT&__rev=1025187666&__s=w3sjer%3Apvs6ot%3Alnm578&__hsi=7531419097793690605&__dyn=...&fb_dtsg=${fb_dtsg}&jazoest=25482&lsd=B5ZJ-mGWZJPxzdo92SnPhE&qpl_active_flow_ids=890780636`;
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "x-asbd-id": "359341",
+      "x-fb-lsd": "B5ZJ-mGWZJPxzdo92SnPhE",
+      "x-fb-qpl-active-flows": "890780636"
+    },
+    referrer: `https://developers.facebook.com/apps/${appId}/dashboard/?business_id=${idbm}`,
+    body,
+    mode: "cors",
+    credentials: "include"
+  });
+}
+
+// Hàm xoá app
+async function deleteApp(appId) {
+  const url = `https://developers.facebook.com/apps/${appId}/delete/`;
+  const body = `confirmed=true&__aaid=0&__user=${user}&__a=1&__req=n&dpr=1&__rev=1025187666&__s=jcy10z%3Aw55dzv%3Acjxvdb&__hsi=7531428809821816560&__dyn=...&fb_dtsg=${fb_dtsg}&jazoest=25402&lsd=zwm-EuixLKDzHa3OwvsLpq&qpl_active_flow_ids=890776884`;
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "x-asbd-id": "359341",
+      "x-fb-lsd": "zwm-EuixLKDzHa3OwvsLpq",
+      "x-fb-qpl-active-flows": "890776884"
+    },
+    referrer: "https://developers.facebook.com/apps/",
+    body,
+    credentials: "include"
+  });
+}
+
+// Chạy chính
+(async () => {
+  for (let i = 0; i < solan; i++) {
+    console.log(`🔄 Lần chạy thứ ${i + 1}/${solan}`);
+
+    const appId = await createTestApp();
+
+    if (!appId) {
+      console.warn("⚠️ Không tạo được app.");
+      continue;
+    }
+
+    console.log("✅ Tạo app thành công:", appId);
+    await sleep(15000); // chờ trước khi gắn sản phẩm
+
+    try {
+      await attachWhatsApp(appId);
+      console.log("📌 Gắn WhatsApp thành công:", appId);
+    } catch (e) {
+      console.error("❌ Lỗi khi gắn WhatsApp:", e);
+    }
+
+    await sleep(5000); // chờ trước khi xoá
+
+    try {
+      await deleteApp(appId);
+      console.log("🗑️ Đã xoá app:", appId);
+    } catch (e) {
+      console.error("❌ Lỗi khi xoá app:", e);
+    }
+
+    await sleep(5000); // nghỉ giữa vòng lặp
+  }
+})();
