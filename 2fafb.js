@@ -1,6 +1,3 @@
-// Bookmarklet: Tự động bật 2FA kiểu Authenticator App (TOTP) trên Facebook
-// Phải chạy trên trang: https://accountscenter.facebook.com
-// Cảnh báo: Rủi ro bảo mật rất cao - chỉ dùng nếu bạn hiểu rõ và chấp nhận rủi ro
 
 (function () {
   'use strict';
