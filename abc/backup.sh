@@ -1,4 +1,6 @@
-sudo -u root bash -c echo "======================"
+#!/bin/bash
+
+echo "======================"
 echo "📦 BẮT ĐẦU BACKUP TOÀN BỘ HỆ THỐNG"
 echo "⏰ Thời gian: $(date)"
 echo "======================"
@@ -14,6 +16,7 @@ websites=("mail.theloi.io.vn" "theloi.io.vn" "key.theloi.io.vn")
 echo ""
 echo "📁 [docker] Đang backup thư mục dk_app..."
 tar -czf "/tmp/$docker_backup_name" -C "$docker_backup_dir" dk_app
+
 echo "🚀 Upload backup docker lên Drive..."
 rclone copyto "/tmp/$docker_backup_name" "$docker_backup_target"
 rm -f "/tmp/$docker_backup_name"
@@ -30,12 +33,15 @@ done
 echo ""
 echo "🌐 [Website] Đang upload dữ liệu website lên Drive…"
 for site in "${websites[@]}"; do
-    backup_file=$(ls -t "$site_local_dir$site"/web_${site}_*.tar.gz "$site_local_dir$site"/${site}_*.tar.gz 2>/dev/null | head -n1)
-    if [[ -f "$backup_file" ]]; then
-        target_name="$site.tar.gz"
-        echo "🚀 Upload: $target_name"
-        rclone copyto "$backup_file" "GoogleDrive:/Backup_Server/Website/$target_name"
-    fi
+  backup_file=$(ls -t \
+    "$site_local_dir$site"/web_${site}_*.tar.gz \
+    "$site_local_dir$site"/${site}_*.tar.gz 2>/dev/null | head -n1)
+
+  if [[ -f "$backup_file" ]]; then
+    target_name="$site.tar.gz"
+    echo "🚀 Upload: $target_name"
+    rclone copyto "$backup_file" "GoogleDrive:/Backup_Server/Website/$target_name"
+  fi
 done
 
 echo ""
@@ -46,4 +52,4 @@ echo "✅ Đã dọn sạch thùng rác!"
 echo ""
 echo "✅🎉 HOÀN TẤT TOÀN BỘ QUÁ TRÌNH BACKUP"
 echo "🏁 Kết thúc lúc: $(date)"
-echo "======================"'
+echo "======================"
