@@ -3,39 +3,61 @@
 # Script cài đặt Docker và chạy các app kiếm tiền chia sẻ băng thông
 # Traffmonetizer / EarnFM / Honeygain / PacketStream / Wipter / CastarSDK / URnetwork
 # + Pawns.app + ProxyLite + Repocket + Proxyrack
-# Hỗ trợ AlmaLinux/CentOS, không xóa container/image cũ
+# Hỗ trợ AlmaLinux/CentOS/RHEL, không xóa container/image cũ
+# ĐÃ SỬA: Không dừng script khi 1 container lỗi (bỏ set -e, dùng || true, báo lỗi nhưng tiếp tục)
 # ========================================================
-# Đã sửa: không dừng khi 1 container lỗi (bỏ set -e, dùng || true, báo lỗi nhưng tiếp tục)
 
 set -uo pipefail
 IFS=$'\n\t'
 
 # ==================== KHAI BÁO TẤT CẢ USER/PASS/API/KEY Ở ĐÂY ====================
-# (giữ nguyên phần khai báo của bạn)
-
+# Traffmonetizer
 TM_TOKEN='OuUALSfuOmDZtYQFznejR8xekKvBzT94UeQMffAe4OU='
+# EarnFM
 EARNFM_TOKEN='e6f2eaee-18e0-4146-82de-491b11fadf3c'
+# Honeygain
 HONEY_EMAIL='loilop9d@gmail.com'
 HONEY_PASS='loilop9d'
+# PacketStream
 PS_CID='1vq6'
+# Wipter
 WIPTER_EMAIL='theloi194@gmail.com'
 WIPTER_PASS='Loi@1234'
+# CastarSDK
 CASTAR_APPKEY='cskfkt+Fis3dXd'
+# URnetwork
 UR_EMAIL='theloi194@gmail.com'
 UR_PASS='Loilop9d@1234'
+# Pawns.app (IPRoyal Pawns)
 PAWNS_EMAIL='theloi194@gmail.com'
 PAWNS_PASS='Loi@1234'
+# ProxyLite
 PROXYLITE_USER_ID='518581'
+# Repocket
 REPOCKET_EMAIL='theloi194@gmail.com'
 REPOCKET_API_KEY='98d0baff-a4ea-41a1-a3bb-c683c267684b'
+# Proxyrack
 PROXYRACK_API_KEY='O9BY4JARKTFQV75GOSEFACVDSFJ7691YWO8FEDES'
 PROXYRACK_DEVICE_NAME="$(curl -s4 ifconfig.me || echo 'Unknown-IP')"
+
+# ==================== TRANG QUẢN LÝ (DASHBOARD) CHÍNH THỨC ====================
+# Traffmonetizer: Trang chủ https://traffmonetizer.com/ | Dashboard đăng nhập: https://app.traffmonetizer.com/
+# EarnFM: Trang chủ https://earn.fm/ | Dashboard (sau khi đăng ký): https://app.earn.fm/ hoặc https://earn.fm/ (có phần account settings)
+# Honeygain: Trang chủ https://www.honeygain.com/ | Dashboard: https://dashboard.honeygain.com/
+# PacketStream: Trang chủ https://packetstream.io/ | Dashboard: https://app.packetstream.io/ hoặc https://app.packetstream.io/dashboard
+# Wipter: Trang chủ https://www.wipter.com/ | Dashboard (sau đăng nhập app): https://www.wipter.com/en (có phần account)
+# CastarSDK: Trang chủ https://www.castarsdk.net/ | Dashboard trung tâm: https://center.castarsdk.net/
+# URnetwork: Trang chủ https://ur.io/ | Dashboard/wallet stats: https://app.ur.network/wallet-stats (hoặc https://ur.io/?auth sau đăng nhập)
+# Pawns.app (IPRoyal): Trang chủ https://pawns.app/ | Dashboard: https://dashboard.pawns.app/
+# ProxyLite: Trang chủ https://proxylite.ru/ | Dashboard cá nhân: https://lk.proxylite.ru/
+# Repocket: Trang chủ https://repocket.co/ | Dashboard earnings: https://app.repocket.com/bandwidth-earnings/
+# Proxyrack: Trang chủ https://www.proxyrack.com/ | Dashboard peer: https://peer.proxyrack.com/dashboard
 
 # -------------------- Hàm tiện ích --------------------
 info()    { echo -e "[\033[1;34mINFO\033[0m] $*"; }
 success() { echo -e "[\033[1;32mOK\033[0m] $*"; }
 warning() { echo -e "[\033[1;33mWARN\033[0m] $*"; }
-error()   { echo -e "[\033[1;31mERROR\033[0m] $*" >&2; }   # ← không exit nữa
+error()   { echo -e "[\033[1;31mERROR\033[0m] $*" >&2; }   # Không exit nữa
 
 # -------------------- Kiểm tra và cài Docker --------------------
 check_docker() {
@@ -45,12 +67,26 @@ check_docker() {
     fi
 
     info "Cài Docker CE..."
-    # (giữ nguyên phần cài đặt của bạn, chỉ thêm || true ở vài chỗ nếu cần)
     if [ -f /etc/debian_version ]; then
         apt-get update -y || true
-        # ... phần còn lại giống script cũ ...
+        apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release || true
+        curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/$(. /etc/os-release; echo "$ID")/gpg | gpg --dearmor -o /usr/share/keyrings/docker.gpg || true
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+        apt-get update -y || true
+        apt-get install -y docker-ce docker-ce-cli containerd.io || true
     elif [ -f /etc/redhat-release ]; then
-        # ... phần còn lại giống script cũ ...
+        OS_MAJOR=$(rpm -E %{rhel})
+        if [ "$OS_MAJOR" -eq 7 ]; then
+            yum install -y yum-utils device-mapper-persistent-data lvm2 || true
+            yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo || true
+            yum makecache fast || true
+            yum install -y docker-ce docker-ce-cli containerd.io || true
+        else
+            dnf install -y dnf-plugins-core || true
+            dnf config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo || true
+            dnf makecache || true
+            dnf install -y docker-ce docker-ce-cli containerd.io || true
+        fi
     else
         error "Hệ điều hành không hỗ trợ. Tiếp tục mà không cài Docker mới."
         return 1
@@ -59,6 +95,7 @@ check_docker() {
     systemctl enable --now docker 2>/dev/null || true
     if command -v docker &>/dev/null; then
         success "Docker đã cài: $(docker --version)"
+        docker run --privileged --rm tonistiigi/binfmt --install all
     else
         warning "Không cài được Docker → các container sẽ không chạy được"
     fi
@@ -88,7 +125,6 @@ run_container() {
         fi
     else
         info "Chạy mới container $name..."
-        # Chạy và bỏ qua lỗi
         if ! docker run -d --name "$name" --restart unless-stopped $cmd >/dev/null 2>&1; then
             error "Không chạy được container $name (có thể image lỗi / token sai / mạng chậm)"
             warning "→ Bỏ qua và tiếp tục với các app khác"
@@ -137,7 +173,7 @@ run_container "urnetwork" "--platform linux/amd64 --privileged -e USER_AUTH='$UR
 docker pull repocket/repocket:latest 2>/dev/null || true
 run_container "repocket" "-e RP_EMAIL='$REPOCKET_EMAIL' -e RP_API_KEY='$REPOCKET_API_KEY' repocket/repocket"
 
-# Proxyrack (giữ logic retry add device)
+# Proxyrack
 info "Cài Proxyrack..."
 UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
 info "UUID: $UUID"
@@ -147,7 +183,7 @@ run_container "proxyrack" "-e UUID='$UUID' -e API_KEY='$PROXYRACK_API_KEY' proxy
 
 sleep 30
 info "Thử add device cho Proxyrack (30 lần)..."
-for i in {1..10}; do
+for i in {1..30}; do
     RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
       -H "Api-Key: $PROXYRACK_API_KEY" \
       -H 'Content-Type: application/json' \
@@ -159,19 +195,20 @@ for i in {1..10}; do
         success "Proxyrack device added thành công!"
         break
     fi
-    sleep 30
+    sleep 10
 done
 
-# ==================== Watchtower (update tự động) ====================
+# ==================== Watchtower (update tự động các container) ====================
 run_container "watchtower" "-v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --include-stopped --include-restarting --revive-stopped --interval 300 tm earnfm-client honeygain psclient wipter castarsdk urnetwork pawns proxylite repocket proxyrack"
 
 # ==================== Báo cáo cuối ====================
 echo ""
 info "====================================="
-info "Hoàn tất script"
-info "Kiểm tra trạng thái:"
+info "Hoàn tất script (một số app có thể lỗi nhưng script đã chạy hết)"
+info "Kiểm tra trạng thái container:"
 docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
 echo ""
 warning "→ Nếu container nào STATUS là Exited → kiểm tra log: docker logs <tên>"
-warning "→ Kiểm tra dashboard từng app để xem có kiếm được tiền không"
-success "Xong!"
+warning "→ Truy cập dashboard từng app (link ở phần comment đầu script) để xem thu nhập"
+warning "→ Một số app có thể bị hạn chế IP VPS → kiểm tra dashboard để xác nhận"
+success "Chạy xong! Chúc bạn kiếm được nhiều tiền nhé!"
