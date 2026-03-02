@@ -161,6 +161,30 @@ run_container "proxylite" "-e USER_ID='$PROXYLITE_USER_ID' proxylite/proxyservic
 # Wipter
 run_container "wipter" "--restart=always --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 --dns=8.8.8.8 --dns=1.1.1.1 --cap-add=NET_ADMIN --device=/dev/net/tun -e WIPTER_EMAIL='$WIPTER_EMAIL' -e WIPTER_PASSWORD='$WIPTER_PASS' ghcr.io/adfly8470/wipter/wipter@sha256:c9bbf2f51af7744724ed7e28e0182e92ee92d725bfc5e334a56b95be5db95ea5"
 
+# ==================== Fix iproute2 cho Wipter ====================
+info "Kiểm tra và cài iproute2 trong container wipter (nếu cần)..."
+
+if docker ps --format '{{.Names}}' | grep -q "^wipter$"; then
+    docker exec wipter bash -c '
+        if command -v ip >/dev/null 2>&1; then
+            echo "[OK] iproute2 đã tồn tại"
+        else
+            echo "[INFO] Chưa có iproute2, tiến hành cài..."
+            if command -v apt >/dev/null 2>&1; then
+                apt update && apt install -y iproute2
+            elif command -v dnf >/dev/null 2>&1; then
+                dnf install -y iproute
+            elif command -v yum >/dev/null 2>&1; then
+                yum install -y iproute
+            else
+                echo "[WARN] Không tìm thấy apt / dnf / yum"
+            fi
+        fi
+    ' >/dev/null 2>&1 || warning "Không cài được iproute2 cho wipter (bỏ qua)"
+else
+    warning "Container wipter không chạy → bỏ qua cài iproute2"
+fi
+
 # CastarSDK
 run_container "castarsdk" "--cpus=0.25 --pull=always --log-driver=json-file --log-opt max-size=1m --log-opt max-file=1 --cap-add=NET_ADMIN --cap-add=NET_RAW --sysctl net.ipv4.ip_forward=1 -e APPKEY='$CASTAR_APPKEY' techroy23/docker-castarsdk:latest"
 
