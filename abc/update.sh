@@ -147,7 +147,13 @@ info "DEVICE/IP chính: $DEVICE"
 
 run_container "tm"            "traffmonetizer/cli_v2:$VERSION start accept --token '$TM_TOKEN' --device-name '$DEVICE'"
 run_container "earnfm-client" "-e EARNFM_TOKEN='$EARNFM_TOKEN' earnfm/earnfm-client:latest"
-run_container "honeygain"     "honeygain/honeygain -tou-accept -email '$HONEY_EMAIL' -pass '$HONEY_PASS' -device '$DEVICE'"
+
+info "Kiểm tra IP cho Honeygain..."
+if [[ "$DEVICE" == 192.168.* ]]; then
+    info "IP hợp lệ (bắt đầu bằng 192.168) → chạy Honeygain"
+    run_container "honeygain" "honeygain/honeygain -tou-accept -email '$HONEY_EMAIL' -pass '$HONEY_PASS' -device '$DEVICE'"
+fi
+
 run_container "psclient"      "-e CID='$PS_CID' packetstream/psclient:latest"
 
 # Pawns.app
