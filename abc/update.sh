@@ -159,7 +159,7 @@ docker pull proxylite/proxyservice 2>/dev/null || true
 run_container "proxylite" "-e USER_ID='$PROXYLITE_USER_ID' proxylite/proxyservice"
 
 # Wipter
-run_container "wipter" "-e WIPTER_EMAIL='$WIPTER_EMAIL' -e WIPTER_PASSWORD='$WIPTER_PASS' ghcr.io/adfly8470/wipter/wipter@sha256:c9bbf2f51af7744724ed7e28e0182e92ee92d725bfc5e334a56b95be5db95ea5"
+run_container "wipter" "--restart=always --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 --dns=8.8.8.8 --dns=1.1.1.1 --cap-add=NET_ADMIN --device=/dev/net/tun -e WIPTER_EMAIL='$WIPTER_EMAIL' -e WIPTER_PASSWORD='$WIPTER_PASS' ghcr.io/adfly8470/wipter/wipter@sha256:c9bbf2f51af7744724ed7e28e0182e92ee92d725bfc5e334a56b95be5db95ea5"
 
 # CastarSDK
 run_container "castarsdk" "--cpus=0.25 --pull=always --log-driver=json-file --log-opt max-size=1m --log-opt max-file=1 --cap-add=NET_ADMIN --cap-add=NET_RAW --sysctl net.ipv4.ip_forward=1 -e APPKEY='$CASTAR_APPKEY' techroy23/docker-castarsdk:latest"
