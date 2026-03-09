@@ -4,9 +4,8 @@
 # Traffmonetizer / EarnFM / Honeygain / PacketStream / Wipter / CastarSDK / URnetwork
 # + Pawns.app + ProxyLite + Repocket + Proxyrack
 # Hỗ trợ AlmaLinux/CentOS/RHEL, không xóa container/image cũ
-# ĐÃ SỬA: Không dừng script khi 1 container lỗi (bỏ set -e, dùng || true, báo lỗi nhưng tiếp tục)
+# ĐÃ SỬA: Không dừng script khi lỗi + sửa run_container dùng array + debug rõ ràng
 # ========================================================
-
 set -uo pipefail
 IFS=$'\n\t'
 
@@ -54,10 +53,10 @@ PROXYRACK_DEVICE_NAME="$(curl -s4 ifconfig.me || echo 'Unknown-IP')"
 # Proxyrack: Trang chủ https://www.proxyrack.com/ | Dashboard peer: https://peer.proxyrack.com/dashboard
 
 # -------------------- Hàm tiện ích --------------------
-info()    { echo -e "[\033[1;34mINFO\033[0m] $*"; }
+info() { echo -e "[\033[1;34mINFO\033[0m] $*"; }
 success() { echo -e "[\033[1;32mOK\033[0m] $*"; }
 warning() { echo -e "[\033[1;33mWARN\033[0m] $*"; }
-error()   { echo -e "[\033[1;31mERROR\033[0m] $*" >&2; }   # Không exit nữa
+error() { echo -e "[\033[1;31mERROR\033[0m] $*" >&2; }
 
 # -------------------- Kiểm tra và cài Docker --------------------
 check_docker() {
@@ -65,7 +64,6 @@ check_docker() {
         info "Docker đã cài: $(docker --version)"
         return 0
     fi
-
     info "Cài Docker CE..."
     if [ -f /etc/debian_version ]; then
         apt-get update -y || true
@@ -91,11 +89,10 @@ check_docker() {
         error "Hệ điều hành không hỗ trợ. Tiếp tục mà không cài Docker mới."
         return 1
     fi
-
     systemctl enable --now docker 2>/dev/null || true
     if command -v docker &>/dev/null; then
         success "Docker đã cài: $(docker --version)"
-        docker run --privileged --rm tonistiigi/binfmt --install all
+        docker run --privileged --rm tonistiigi/binfmt --install all || true
     else
         warning "Không cài được Docker → các container sẽ không chạy được"
     fi
@@ -104,39 +101,45 @@ check_docker() {
 # -------------------- Phát hiện kiến trúc --------------------
 detect_architecture() {
     case "$(uname -m)" in
-        x86_64)  VERSION="latest" ;;
+        x86_64) VERSION="latest" ;;
         aarch64) VERSION="arm64v8" ;;
-        *)       VERSION="latest"; warning "Kiến trúc lạ: $(uname -m) → dùng latest" ;;
+        *) VERSION="latest"; warning "Kiến trúc lạ: $(uname -m) → dùng latest" ;;
     esac
     info "Sử dụng tag image: $VERSION"
 }
 
-# -------------------- Chạy container (không dừng khi lỗi) --------------------
+# -------------------- Chạy container (đã sửa: dùng array + debug) --------------------
 run_container() {
     local name="$1"
     shift
-    local cmd="$*"
+    local args=("$@")  # Lưu tất cả arguments vào array để giữ nguyên quote và khoảng trắng
 
     if docker ps -a --format '{{.Names}}' | grep -q "^$name$"; then
         info "Container $name đã tồn tại."
         if ! docker ps --format '{{.Names}}' | grep -q "^$name$"; then
             info "Khởi động lại $name..."
-            docker start "$name" >/dev/null 2>&1 || warning "Không start lại được $name"
+            docker start "$name" || warning "Không start lại được $name"
         fi
+        return
+    fi
+
+    info "Chạy mới container $name..."
+    # In lệnh đầy đủ để debug
+    echo -e "[\033[1;36mDEBUG CMD\033[0m] docker run -d --name \"$name\" --restart unless-stopped ${args[*]}"
+
+    # Chạy thật với array (an toàn nhất)
+    if docker run -d --name "$name" --restart unless-stopped "${args[@]}"; then
+        success "$name đang chạy"
     else
-        info "Chạy mới container $name..."
-        if ! docker run -d --name "$name" --restart unless-stopped $cmd >/dev/null 2>&1; then
-            error "Không chạy được container $name (có thể image lỗi / token sai / mạng chậm)"
-            warning "→ Bỏ qua và tiếp tục với các app khác"
-        else
-            success "$name đang chạy"
-        fi
+        error "Không chạy được container $name"
+        warning "→ Xem lỗi chi tiết ngay phía trên (thường: image không tồn tại, token sai, quyền, flag sai vị trí...)"
+        warning "→ Nếu container được tạo nhưng exited: chạy 'docker logs $name'"
+        warning "→ Script vẫn tiếp tục với các app khác"
     fi
 }
 
 # ==================== THỰC THI CHÍNH ====================
 info "Bắt đầu cài đặt và chạy các container (không dừng khi lỗi)..."
-
 check_docker
 detect_architecture
 
@@ -144,32 +147,31 @@ DEVICE=$(ip addr show | grep 'inet ' | awk '{print $2}' | cut -d '/' -f 1 | sort
 info "DEVICE/IP chính: $DEVICE"
 
 # ==================== Chạy từng container ====================
+run_container "tm" "traffmonetizer/cli_v2:$VERSION" "start" "accept" "--token" "$TM_TOKEN" "--device-name" "$DEVICE"
 
-run_container "tm"            "traffmonetizer/cli_v2:$VERSION start accept --token '$TM_TOKEN' --device-name '$DEVICE'"
-run_container "earnfm-client" "-e EARNFM_TOKEN='$EARNFM_TOKEN' earnfm/earnfm-client:latest"
+run_container "earnfm-client" "-e" "EARNFM_TOKEN=$EARNFM_TOKEN" "earnfm/earnfm-client:latest"
 
 info "Kiểm tra IP cho Honeygain..."
 if [[ "$DEVICE" == 192.168.* ]]; then
     info "IP hợp lệ (bắt đầu bằng 192.168) → chạy Honeygain"
-    run_container "honeygain" "honeygain/honeygain -tou-accept -email '$HONEY_EMAIL' -pass '$HONEY_PASS' -device '$DEVICE'"
+    run_container "honeygain" "honeygain/honeygain:latest" "-tou-accept" "-email" "$HONEY_EMAIL" "-pass" "$HONEY_PASS" "-device" "$DEVICE"
 fi
 
-run_container "psclient"      "-e CID='$PS_CID' packetstream/psclient:latest"
+run_container "psclient" "-e" "CID=$PS_CID" "packetstream/psclient:latest"
 
 # Pawns.app
 docker pull iproyal/pawns-cli:latest 2>/dev/null || true
-run_container "pawns" "iproyal/pawns-cli:latest -email='$PAWNS_EMAIL' -password='$PAWNS_PASS' -device-name='BacNinh-VPS' -device-id='BacNinh01' -accept-tos"
+run_container "pawns" "iproyal/pawns-cli:latest" "-email=$PAWNS_EMAIL" "-password=$PAWNS_PASS" "-device-name=BacNinh-VPS" "-device-id=BacNinh01" "-accept-tos"
 
 # ProxyLite
 docker pull proxylite/proxyservice 2>/dev/null || true
-run_container "proxylite" "-e USER_ID='$PROXYLITE_USER_ID' proxylite/proxyservice"
+run_container "proxylite" "-e" "USER_ID=$PROXYLITE_USER_ID" "proxylite/proxyservice"
 
 # Wipter
-run_container "wipter" "--restart=always --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 --dns=8.8.8.8 --dns=1.1.1.1 --cap-add=NET_ADMIN --device=/dev/net/tun -e WIPTER_EMAIL='$WIPTER_EMAIL' -e WIPTER_PASSWORD='$WIPTER_PASS' ghcr.io/adfly8470/wipter/wipter@sha256:c9bbf2f51af7744724ed7e28e0182e92ee92d725bfc5e334a56b95be5db95ea5"
+run_container "wipter" "--restart=always" "--log-driver=json-file" "--log-opt" "max-size=10m" "--log-opt" "max-file=3" "--dns=8.8.8.8" "--dns=1.1.1.1" "--cap-add=NET_ADMIN" "--device=/dev/net/tun" "-e" "WIPTER_EMAIL=$WIPTER_EMAIL" "-e" "WIPTER_PASSWORD=$WIPTER_PASS" "ghcr.io/adfly8470/wipter/wipter@sha256:c9bbf2f51af7744724ed7e28e0182e92ee92d725bfc5e334a56b95be5db95ea5"
 
 # ==================== Fix iproute2 cho Wipter ====================
 info "Kiểm tra và cài iproute2 trong container wipter (nếu cần)..."
-
 if docker ps --format '{{.Names}}' | grep -q "^wipter$"; then
     docker exec wipter bash -c '
         if command -v ip >/dev/null 2>&1; then
@@ -186,30 +188,29 @@ if docker ps --format '{{.Names}}' | grep -q "^wipter$"; then
                 echo "[WARN] Không tìm thấy apt / dnf / yum"
             fi
         fi
-    ' >/dev/null 2>&1 || warning "Không cài được iproute2 cho wipter (bỏ qua)"
+    ' || warning "Không cài được iproute2 cho wipter (bỏ qua)"
 else
     warning "Container wipter không chạy → bỏ qua cài iproute2"
 fi
 
-# CastarSDK
-run_container "castarsdk" "--cpus=0.25 --pull=always --log-driver=json-file --log-opt max-size=1m --log-opt max-file=1 --cap-add=NET_ADMIN --cap-add=NET_RAW --sysctl net.ipv4.ip_forward=1 -e APPKEY='$CASTAR_APPKEY' techroy23/docker-castarsdk:latest"
+# CastarSDK (thêm --privileged nếu cần, bỏ --cpus tạm nếu gây lỗi)
+run_container "castarsdk" "--cpus=0.25" "--pull=always" "--log-driver=json-file" "--log-opt" "max-size=1m" "--log-opt" "max-file=1" "--cap-add=NET_ADMIN" "--cap-add=NET_RAW" "--sysctl" "net.ipv4.ip_forward=1" "-e" "APPKEY=$CASTAR_APPKEY" "techroy23/docker-castarsdk:latest"
 
 # URnetwork
 UR_DATA_DIR="$PWD/urnetwork_data"
 mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || true
-run_container "urnetwork" "--platform linux/amd64 --privileged -e USER_AUTH='$UR_EMAIL' -e PASSWORD='$UR_PASS' -e ENABLE_IP_CHECKER=false -v '$UR_DATA_DIR/vnstat:/var/lib/vnstat' ghcr.io/techroy23/docker-urnetwork:latest"
+run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # Repocket
 docker pull repocket/repocket:latest 2>/dev/null || true
-run_container "repocket" "-e RP_EMAIL='$REPOCKET_EMAIL' -e RP_API_KEY='$REPOCKET_API_KEY' repocket/repocket"
+run_container "repocket" "-e" "RP_EMAIL=$REPOCKET_EMAIL" "-e" "RP_API_KEY=$REPOCKET_API_KEY" "repocket/repocket"
 
 # Proxyrack
 info "Cài Proxyrack..."
 UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
 info "UUID: $UUID"
-
 docker rm -f proxyrack >/dev/null 2>&1 || true
-run_container "proxyrack" "-e UUID='$UUID' -e API_KEY='$PROXYRACK_API_KEY' proxyrack/pop"
+run_container "proxyrack" "-e" "UUID=$UUID" "-e" "API_KEY=$PROXYRACK_API_KEY" "proxyrack/pop"
 
 sleep 30
 info "Thử add device cho Proxyrack (30 lần)..."
@@ -219,7 +220,7 @@ for i in {1..30}; do
       -H 'Content-Type: application/json' \
       -H 'Accept: application/json' \
       -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
-    
+   
     echo "[Thử $i/30] Response: $RESPONSE"
     if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
         success "Proxyrack device added thành công!"
@@ -228,8 +229,8 @@ for i in {1..30}; do
     sleep 10
 done
 
-# ==================== Watchtower (update tự động các container) ====================
-run_container "watchtower" "-v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --include-stopped --include-restarting --revive-stopped --interval 300 tm earnfm-client honeygain psclient wipter castarsdk urnetwork pawns proxylite repocket proxyrack"
+# ==================== Watchtower ====================
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "containrrr/watchtower" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
 
 # ==================== Báo cáo cuối ====================
 echo ""
