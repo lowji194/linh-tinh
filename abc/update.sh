@@ -141,30 +141,6 @@ run_container "proxylite" "-e" "USER_ID=$PROXYLITE_USER_ID" "proxylite/proxyserv
 
 run_container "repocket" "-e" "RP_EMAIL=$REPOCKET_EMAIL" "-e" "RP_API_KEY=$REPOCKET_API_KEY" "repocket/repocket"
 
-# Proxyrack
-info "Cài Proxyrack..."
-UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
-info "UUID: $UUID"
-docker rm -f proxyrack >/dev/null 2>&1 || true
-run_container "proxyrack" "-e" "UUID=$UUID" "-e" "API_KEY=$PROXYRACK_API_KEY" "proxyrack/pop"
-
-sleep 30
-info "Thử add device cho Proxyrack (30 lần)..."
-for i in {1..30}; do
-    RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
-      -H "Api-Key: $PROXYRACK_API_KEY" \
-      -H 'Content-Type: application/json' \
-      -H 'Accept: application/json' \
-      -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
-   
-    echo "[Thử $i/30] Response: $RESPONSE"
-    if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
-        success "Proxyrack device added thành công!"
-        break
-    fi
-    sleep 10
-done
-
 # ==================== App CHỈ residential (gom vào 1 if) ====================
 if [[ "$DEVICE" == 192.168.* ]]; then
     info "IP residential (192.168.*) → chạy Honeygain + PacketStream"
@@ -205,6 +181,30 @@ run_container "castarsdk" "--cpus=0.25" "--pull=always" "--log-driver=json-file"
 UR_DATA_DIR="$PWD/urnetwork_data"
 mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || true
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
+
+# Proxyrack
+info "Cài Proxyrack..."
+UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
+info "UUID: $UUID"
+docker rm -f proxyrack >/dev/null 2>&1 || true
+run_container "proxyrack" "-e" "UUID=$UUID" "-e" "API_KEY=$PROXYRACK_API_KEY" "proxyrack/pop"
+
+sleep 30
+info "Thử add device cho Proxyrack (30 lần)..."
+for i in {1..30}; do
+    RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
+      -H "Api-Key: $PROXYRACK_API_KEY" \
+      -H 'Content-Type: application/json' \
+      -H 'Accept: application/json' \
+      -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
+   
+    echo "[Thử $i/30] Response: $RESPONSE"
+    if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
+        success "Proxyrack device added thành công!"
+        break
+    fi
+    sleep 10
+done
 
 # ==================== Watchtower ====================
 run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "containrrr/watchtower" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
