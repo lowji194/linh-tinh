@@ -183,28 +183,58 @@ mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || tru
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # Proxyrack
-info "Cài Proxyrack..."
-UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
-info "UUID: $UUID"
-docker rm -f proxyrack >/dev/null 2>&1 || true
-run_container "proxyrack" "-e" "UUID=$UUID" "-e" "API_KEY=$PROXYRACK_API_KEY" "proxyrack/pop"
+info "Xử lý Proxyrack..."
 
-sleep 30
-info "Thử add device cho Proxyrack (30 lần)..."
-for i in {1..30}; do
-    RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
-      -H "Api-Key: $PROXYRACK_API_KEY" \
-      -H 'Content-Type: application/json' \
-      -H 'Accept: application/json' \
-      -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
-   
-    echo "[Thử $i/30] Response: $RESPONSE"
-    if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
-        success "Proxyrack device added thành công!"
-        break
+if docker ps --format '{{.Names}}' | grep -q "^proxyrack$"; then
+    info "Container proxyrack đang chạy → bỏ qua việc add device mới"
+    success "Proxyrack đã được thiết lập trước đó, giữ nguyên"
+else
+    if docker ps -a --format '{{.Names}}' | grep -q "^proxyrack$"; then
+        info "Container proxyrack tồn tại nhưng không chạy → xóa và tạo mới"
+        docker rm -f proxyrack >/dev/null 2>&1 || true
     fi
-    sleep 10
-done
+
+    info "Chạy mới Proxyrack..."
+    UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
+    info "UUID mới: $UUID"
+
+    run_container "proxyrack" \
+        "-e" "UUID=$UUID" \
+        "-e" "API_KEY=$PROXYRACK_API_KEY" \
+        "proxyrack/pop"
+
+    sleep 20   # chờ container khởi động ổn định hơn một chút
+
+    info "Thử add device cho Proxyrack (tối đa 30 lần)..."
+    added=false
+    for i in {1..30}; do
+        RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
+            -H "Api-Key: $PROXYRACK_API_KEY" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json' \
+            -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
+
+        echo "[Thử $i/30] Response: $RESPONSE"
+
+        if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
+            success "Proxyrack device added thành công!"
+            added=true
+            break
+        fi
+        if echo "$RESPONSE" | grep -q "already exists"; then
+            success "Device đã tồn tại trên hệ thống Proxyrack → bỏ qua"
+            added=true
+            break
+        fi
+
+        sleep 8
+    done
+
+    if ! $added; then
+        warning "Không add được device sau 30 lần thử → có thể cần kiểm tra thủ công"
+        warning "→ Dashboard: https://peer.proxyrack.com/dashboard"
+    fi
+fi
 
 # ==================== Watchtower ====================
 run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:v1.8.0" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
