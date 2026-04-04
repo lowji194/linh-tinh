@@ -237,7 +237,7 @@ else
 fi
 
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:v1.8.0" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
 
 # ==================== Báo cáo cuối ====================
 echo ""
