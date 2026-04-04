@@ -178,7 +178,7 @@ fi
 
 run_container "castarsdk" "--cpus=0.25" "--pull=always" "--log-driver=json-file" "--log-opt" "max-size=1m" "--log-opt" "max-file=1" "--cap-add=NET_ADMIN" "--cap-add=NET_RAW" "--sysctl" "net.ipv4.ip_forward=1" "-e" "APPKEY=$CASTAR_APPKEY" "techroy23/docker-castarsdk:latest"
 
-UR_DATA_DIR="$PWD/urnetwork_data"
+UR_DATA_DIR="/opt/urnetwork_data"
 mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || true
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
