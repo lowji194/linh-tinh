@@ -2,7 +2,7 @@
 # ========================================================
 # Script cài đặt Docker và chạy các app kiếm tiền chia sẻ băng thông
 # Traffmonetizer / EarnFM / Honeygain / PacketStream / Wipter / CastarSDK / URnetwork
-# + Pawns.app + ProxyLite + Repocket
+# + Pawns.app + Repocket
 # Hỗ trợ AlmaLinux/CentOS/RHEL, không xóa container/image cũ
 # ĐÃ SỬA: Không dừng khi lỗi + run_container array an toàn + gom residential vào 1 if + không warning IP
 # ========================================================
@@ -22,7 +22,6 @@ UR_EMAIL='theloi194@gmail.com'
 UR_PASS='Loilop9d@1234'
 PAWNS_EMAIL='theloi194@gmail.com'
 PAWNS_PASS='Loi@1234'
-PROXYLITE_USER_ID='518581'
 REPOCKET_EMAIL='theloi194@gmail.com'
 REPOCKET_API_KEY='98d0baff-a4ea-41a1-a3bb-c683c267684b'
 
@@ -35,7 +34,6 @@ REPOCKET_API_KEY='98d0baff-a4ea-41a1-a3bb-c683c267684b'
 # CastarSDK: Trang chủ https://www.castarsdk.net/ | Dashboard trung tâm: https://center.castarsdk.net/
 # URnetwork: Trang chủ https://ur.io/ | Dashboard/wallet stats: https://app.ur.network/wallet-stats (hoặc https://ur.io/?auth sau đăng nhập)
 # Pawns.app (IPRoyal): Trang chủ https://pawns.app/ | Dashboard: https://dashboard.pawns.app/
-# ProxyLite: Trang chủ https://proxylite.ru/ | Dashboard cá nhân: https://lk.proxylite.ru/
 # Repocket: Trang chủ https://repocket.co/ | Dashboard earnings: https://app.repocket.com/bandwidth-earnings/
 
 # -------------------- Hàm tiện ích --------------------
@@ -133,9 +131,6 @@ run_container "earnfm-client" "-e" "EARNFM_TOKEN=$EARNFM_TOKEN" "earnfm/earnfm-c
 docker pull iproyal/pawns-cli:latest 2>/dev/null || true
 run_container "pawns" "iproyal/pawns-cli:latest" "-email=$PAWNS_EMAIL" "-password=$PAWNS_PASS" "-device-name=BacNinh-VPS" "-device-id=BacNinh01" "-accept-tos"
 
-docker pull proxylite/proxyservice 2>/dev/null || true
-run_container "proxylite" "-e" "USER_ID=$PROXYLITE_USER_ID" "proxylite/proxyservice"
-
 run_container "repocket" "-e" "RP_EMAIL=$REPOCKET_EMAIL" "-e" "RP_API_KEY=$REPOCKET_API_KEY" "repocket/repocket"
 
 # ==================== App CHỈ residential (gom vào 1 if) ====================
@@ -180,7 +175,7 @@ mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || tru
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "repocket"
 
 # ==================== Báo cáo cuối ====================
 echo ""
