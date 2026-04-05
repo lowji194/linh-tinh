@@ -2,7 +2,7 @@
 # ========================================================
 # Script cài đặt Docker và chạy các app kiếm tiền chia sẻ băng thông
 # Traffmonetizer / EarnFM / Honeygain / PacketStream / Wipter / CastarSDK / URnetwork
-# + Pawns.app + ProxyLite + Repocket + Proxyrack
+# + Pawns.app + ProxyLite + Repocket
 # Hỗ trợ AlmaLinux/CentOS/RHEL, không xóa container/image cũ
 # ĐÃ SỬA: Không dừng khi lỗi + run_container array an toàn + gom residential vào 1 if + không warning IP
 # ========================================================
@@ -25,8 +25,6 @@ PAWNS_PASS='Loi@1234'
 PROXYLITE_USER_ID='518581'
 REPOCKET_EMAIL='theloi194@gmail.com'
 REPOCKET_API_KEY='98d0baff-a4ea-41a1-a3bb-c683c267684b'
-PROXYRACK_API_KEY='O9BY4JARKTFQV75GOSEFACVDSFJ7691YWO8FEDES'
-PROXYRACK_DEVICE_NAME="$(curl -s4 ifconfig.me || echo 'Unknown-IP')"
 
 # ==================== TRANG QUẢN LÝ (DASHBOARD) CHÍNH THỨC ====================
 # Traffmonetizer: Trang chủ https://traffmonetizer.com/ | Dashboard đăng nhập: https://app.traffmonetizer.com/
@@ -39,7 +37,6 @@ PROXYRACK_DEVICE_NAME="$(curl -s4 ifconfig.me || echo 'Unknown-IP')"
 # Pawns.app (IPRoyal): Trang chủ https://pawns.app/ | Dashboard: https://dashboard.pawns.app/
 # ProxyLite: Trang chủ https://proxylite.ru/ | Dashboard cá nhân: https://lk.proxylite.ru/
 # Repocket: Trang chủ https://repocket.co/ | Dashboard earnings: https://app.repocket.com/bandwidth-earnings/
-# Proxyrack: Trang chủ https://www.proxyrack.com/ | Dashboard peer: https://peer.proxyrack.com/dashboard
 
 # -------------------- Hàm tiện ích --------------------
 info() { echo -e "[\033[1;34mINFO\033[0m] $*"; }
@@ -182,62 +179,8 @@ UR_DATA_DIR="/opt/urnetwork_data"
 mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || true
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
-# Proxyrack
-info "Xử lý Proxyrack..."
-
-if docker ps --format '{{.Names}}' | grep -q "^proxyrack$"; then
-    info "Container proxyrack đang chạy → bỏ qua việc add device mới"
-    success "Proxyrack đã được thiết lập trước đó, giữ nguyên"
-else
-    if docker ps -a --format '{{.Names}}' | grep -q "^proxyrack$"; then
-        info "Container proxyrack tồn tại nhưng không chạy → xóa và tạo mới"
-        docker rm -f proxyrack >/dev/null 2>&1 || true
-    fi
-
-    info "Chạy mới Proxyrack..."
-    UUID=$(openssl rand -hex 32 | tr 'a-f' 'A-F' 2>/dev/null || echo "fallback-$(date +%s)")
-    info "UUID mới: $UUID"
-
-    run_container "proxyrack" \
-        "-e" "UUID=$UUID" \
-        "-e" "API_KEY=$PROXYRACK_API_KEY" \
-        "proxyrack/pop"
-
-    sleep 20   # chờ container khởi động ổn định hơn một chút
-
-    info "Thử add device cho Proxyrack (tối đa 30 lần)..."
-    added=false
-    for i in {1..30}; do
-        RESPONSE=$(curl -s -X POST https://peer.proxyrack.com/api/device/add \
-            -H "Api-Key: $PROXYRACK_API_KEY" \
-            -H 'Content-Type: application/json' \
-            -H 'Accept: application/json' \
-            -d "{\"device_id\":\"$UUID\",\"device_name\":\"$PROXYRACK_DEVICE_NAME\"}" || echo '{"status":"curl_failed"}')
-
-        echo "[Thử $i/30] Response: $RESPONSE"
-
-        if echo "$RESPONSE" | grep -q '"status"[[:space:]]*:[[:space:]]*"success"'; then
-            success "Proxyrack device added thành công!"
-            added=true
-            break
-        fi
-        if echo "$RESPONSE" | grep -q "already exists"; then
-            success "Device đã tồn tại trên hệ thống Proxyrack → bỏ qua"
-            added=true
-            break
-        fi
-
-        sleep 8
-    done
-
-    if ! $added; then
-        warning "Không add được device sau 30 lần thử → có thể cần kiểm tra thủ công"
-        warning "→ Dashboard: https://peer.proxyrack.com/dashboard"
-    fi
-fi
-
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket" "proxyrack"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "proxylite" "repocket"
 
 # ==================== Báo cáo cuối ====================
 echo ""
