@@ -12,6 +12,7 @@ DNS_RECORDS=(
   "cb9eacf9f81fb77fe3b4a552b62cd5de theloi.io.vn"
   #"4daf375b7a3c71df1e6f71561b56d44c key.theloi.io.vn"
   "19e45d6498980b6bdf08947a28fbe9d6 bit.theloi.io.vn"
+  "a8ba7e601400a3a34d322e4a955dddb1 mail.theloi.io.vn"
 )
 
 # Lấy IP mới
