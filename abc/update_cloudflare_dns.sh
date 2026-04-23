@@ -10,7 +10,7 @@ AUTH_KEY="3e1226b12dcb65948c9449d758acb3a215d47"
 # Danh sách DNS records
 DNS_RECORDS=(
   "cb9eacf9f81fb77fe3b4a552b62cd5de theloi.io.vn"
-  #"4daf375b7a3c71df1e6f71561b56d44c key.theloi.io.vn"
+  "4daf375b7a3c71df1e6f71561b56d44c key.theloi.io.vn"
   "19e45d6498980b6bdf08947a28fbe9d6 bit.theloi.io.vn"
   "a8ba7e601400a3a34d322e4a955dddb1 mail.theloi.io.vn"
   "333d365cc602e52f45d3c5c2641306eb proxy.theloi.io.vn"
