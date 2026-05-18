@@ -17,7 +17,6 @@ HONEY_PASS='loilop9d'
 PS_CID='1vq6'
 WIPTER_EMAIL='theloi194@gmail.com'
 WIPTER_PASS='Loi@1234'
-CASTAR_APPKEY='cskfkt+Fis3dXd'
 UR_EMAIL='theloi194@gmail.com'
 UR_PASS='Loilop9d@1234'
 PAWNS_EMAIL='theloi194@gmail.com'
@@ -31,7 +30,6 @@ REPOCKET_API_KEY='98d0baff-a4ea-41a1-a3bb-c683c267684b'
 # Honeygain: Trang chủ https://www.honeygain.com/ | Dashboard: https://dashboard.honeygain.com/
 # PacketStream: Trang chủ https://packetstream.io/ | Dashboard: https://app.packetstream.io/ hoặc https://app.packetstream.io/dashboard
 # Wipter: Trang chủ https://www.wipter.com/ | Dashboard (sau đăng nhập app): https://www.wipter.com/en (có phần account)
-# CastarSDK: Trang chủ https://www.castarsdk.net/ | Dashboard trung tâm: https://center.castarsdk.net/
 # URnetwork: Trang chủ https://ur.io/ | Dashboard/wallet stats: https://app.ur.network/wallet-stats (hoặc https://ur.io/?auth sau đăng nhập)
 # Pawns.app (IPRoyal): Trang chủ https://pawns.app/ | Dashboard: https://dashboard.pawns.app/
 # Repocket: Trang chủ https://repocket.co/ | Dashboard earnings: https://app.repocket.com/bandwidth-earnings/
@@ -168,14 +166,13 @@ else
     warning "Container wipter không chạy → bỏ qua"
 fi
 
-run_container "castarsdk" "--cpus=0.25" "--pull=always" "--log-driver=json-file" "--log-opt" "max-size=1m" "--log-opt" "max-file=1" "--cap-add=NET_ADMIN" "--cap-add=NET_RAW" "--sysctl" "net.ipv4.ip_forward=1" "-e" "APPKEY=$CASTAR_APPKEY" "techroy23/docker-castarsdk:latest"
 
 UR_DATA_DIR="/opt/urnetwork_data"
 mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || true
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "castarsdk" "urnetwork" "pawns" "repocket"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "urnetwork" "pawns" "repocket"
 
 # ==================== Báo cáo cuối ====================
 echo ""
