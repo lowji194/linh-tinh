@@ -172,7 +172,7 @@ mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || tru
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "-e" "DOCKER_API_VERSION=1.53" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "urnetwork" "pawns" "repocket"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "urnetwork" "pawns" "repocket"
 
 # ==================== Báo cáo cuối ====================
 echo ""
