@@ -12,8 +12,6 @@ IFS=$'\n\t'
 # ==================== KHAI BÁO TẤT CẢ USER/PASS/API/KEY ====================
 TM_TOKEN='OuUALSfuOmDZtYQFznejR8xekKvBzT94UeQMffAe4OU='
 EARNFM_TOKEN='e6f2eaee-18e0-4146-82de-491b11fadf3c'
-HONEY_EMAIL='loilop9d@gmail.com'
-HONEY_PASS='loilop9d'
 PS_CID='1vq6'
 WIPTER_EMAIL='theloi194@gmail.com'
 WIPTER_PASS='Loi@1234'
@@ -135,7 +133,31 @@ run_container "repocket" "-e" "RP_EMAIL=$REPOCKET_EMAIL" "-e" "RP_API_KEY=$REPOC
 if [[ "$DEVICE" == 192.168.* ]]; then
     info "IP residential (192.168.*) → chạy Honeygain + PacketStream"
 
-    run_container "honeygain" "honeygain/honeygain:latest" "-tou-accept" "-email" "$HONEY_EMAIL" "-pass" "$HONEY_PASS" "-device" "$DEVICE"
+# Xóa container honeygain cũ nếu tồn tại
+if docker ps -a --format '{{.Names}}' | grep -q "^honeygain$"; then
+    info "Xóa container honeygain cũ..."
+    docker rm -f honeygain >/dev/null 2>&1 || true
+fi
+
+# Lấy email|password từ API
+HG_ACCOUNT=$(curl -fsSL "https://theloi.io.vn/honeygain/" 2>/dev/null || echo "")
+
+if [[ "$HG_ACCOUNT" == *"|"* ]]; then
+    HONEY_EMAIL="${HG_ACCOUNT%%|*}"
+    HONEY_PASS="${HG_ACCOUNT#*|}"
+
+    info "Đã nhận tài khoản Honeygain: $HONEY_EMAIL"
+
+    run_container \
+        "honeygain" \
+        "honeygain/honeygain:latest" \
+        "-tou-accept" \
+        "-email" "$HONEY_EMAIL" \
+        "-pass" "$HONEY_PASS" \
+        "-device" "$DEVICE"
+else
+    warning "Không lấy được tài khoản Honeygain từ API"
+fi
 
     run_container "psclient" "-e" "CID=$PS_CID" "packetstream/psclient:latest"
 fi
@@ -172,7 +194,7 @@ mkdir -p "$UR_DATA_DIR/vnstat" && chmod -R 777 "$UR_DATA_DIR" 2>/dev/null || tru
 run_container "urnetwork" "--platform" "linux/amd64" "--privileged" "-e" "USER_AUTH=$UR_EMAIL" "-e" "PASSWORD=$UR_PASS" "-e" "ENABLE_IP_CHECKER=false" "-v" "$UR_DATA_DIR/vnstat:/var/lib/vnstat" "ghcr.io/techroy23/docker-urnetwork:latest"
 
 # ==================== Watchtower ====================
-run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnm-client" "honeygain" "psclient" "wipter" "urnetwork" "pawns" "repocket"
+run_container "watchtower" "-v" "/var/run/docker.sock:/var/run/docker.sock" "containrrr/watchtower:latest" "--cleanup" "--include-stopped" "--include-restarting" "--revive-stopped" "--interval" "300" "tm" "earnfm-client" "honeygain" "psclient" "wipter" "urnetwork" "pawns" "repocket"
 
 # ==================== Báo cáo cuối ====================
 echo ""
