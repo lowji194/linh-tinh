@@ -13,7 +13,6 @@ DNS_RECORDS=(
   "4daf375b7a3c71df1e6f71561b56d44c key.theloi.io.vn"
   "19e45d6498980b6bdf08947a28fbe9d6 bit.theloi.io.vn"
   "a8ba7e601400a3a34d322e4a955dddb1 mail.theloi.io.vn"
-  "333d365cc602e52f45d3c5c2641306eb proxy.theloi.io.vn"
   "9482ed07d31a2de8bd251eab5fc4a61d tik.theloi.io.vn"
 )
 
@@ -38,8 +37,7 @@ update_dns_record() {
   "type": "A",
   "name": "$host_name",
   "content": "$NEW_IP",
-  "ttl": 1,
-  "proxied": false
+  "ttl": 1
 }
 EOF
 )
