@@ -1,4 +1,3 @@
-Copy nội dung Code bên dưới, thay địa chỉ Ipv6 VPS của bạn
-```bash
-  curl -sL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/Script_enable_IPv6_Cloudfly | base64 -d | bash -s -- 2407:5b40:0:363::1de
-```
+curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/MOD.SH -o install-motd.sh
+chmod +x install-motd.sh
+sudo ./install-motd.sh
