@@ -3,6 +3,7 @@
 # ============================================================
 #  install-motd.sh  (bản gộp 1 file)
 #  Cài đặt Custom MOTD (Hacker/Developer style) cho Ubuntu
+#  + Cài đặt Pre-login Info (/etc/issue) tự động cập nhật qua systemd
 #
 #  Cách dùng:
 #    chmod +x install-motd.sh
@@ -152,9 +153,63 @@ if [ -f /etc/pam.d/sshd ]; then
     fi
 fi
 
+# ============================================================
+#  PRE-LOGIN INFO (/etc/issue) — hiển thị TRƯỚC khi đăng nhập
+#  Khác với MOTD (hiển thị SAU khi đăng nhập thành công)
+# ============================================================
+
+PRELOGIN_SCRIPT="/root/prelogin-info.sh"
+PRELOGIN_SERVICE="/etc/systemd/system/prelogin-info.service"
+
+echo "==> Ghi script Pre-login vào $PRELOGIN_SCRIPT ..."
+cat > "$PRELOGIN_SCRIPT" << 'PRELOGIN_EOF'
+#!/bin/bash
+# Script tạo pre-login screen tự động cập nhật
+LAN_IP=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n1)
+PUBLIC_IP=$(curl -4 -s --max-time 6 ifconfig.me || echo "No internet")
+BOOT_TIME=$(who -b | awk '{print $3 " " $4}')
+UPTIME=$(uptime -p)
+cat > /etc/issue <<EOF
+============================================================
+IP LAN      : $LAN_IP
+Public IP   : $PUBLIC_IP
+Boot lúc    : $BOOT_TIME
+Uptime      : $UPTIME
+============================================================
+Login:
+EOF
+PRELOGIN_EOF
+
+chmod +x "$PRELOGIN_SCRIPT"
+chown root:root "$PRELOGIN_SCRIPT"
+
+echo "==> Tạo systemd service prelogin-info.service ..."
+cat > "$PRELOGIN_SERVICE" << 'EOF'
+[Unit]
+Description=Update Pre-login Info
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/prelogin-info.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+echo "==> Kích hoạt và chạy prelogin-info.service ..."
+systemctl daemon-reload
+systemctl enable prelogin-info.service >/dev/null 2>&1
+systemctl restart prelogin-info.service
+
 echo ""
 echo "✅  Cài đặt hoàn tất!"
-echo "    - Script MOTD: $TARGET_FILE"
-echo "    - Sao lưu MOTD gốc: /etc/update-motd.d.bak (nếu có)"
-echo "    - Đăng nhập SSH lại (hoặc chạy: sudo run-parts /etc/update-motd.d) để xem kết quả."
+echo "    - Script MOTD:            $TARGET_FILE"
+echo "    - Sao lưu MOTD gốc:       /etc/update-motd.d.bak (nếu có)"
+echo "    - Script Pre-login:       $PRELOGIN_SCRIPT"
+echo "    - Service Pre-login:      $PRELOGIN_SERVICE (đã enable + chạy)"
+echo "    - Đăng nhập SSH lại (hoặc chạy: sudo run-parts /etc/update-motd.d) để xem kết quả MOTD."
+echo "    - Xem trước Pre-login:    cat /etc/issue"
 echo ""
