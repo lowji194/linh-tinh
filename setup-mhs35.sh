@@ -46,6 +46,16 @@ cat > /boot/firmware/cmdline.txt << EOF
 console=serial0,115200 console=tty1 fbcon=map:1 fbcon=rotate:0 root=LABEL=writable rootfstype=ext4 rootwait fixrtc cfg80211.ieee80211_regdom=VN ds=nocloud;i=rpi-imager-1783185515732
 EOF
 
+sudo mkdir -p /etc/X11/xorg.conf.d
+
+sudo tee /etc/X11/xorg.conf.d/99-fbdev.conf > /dev/null <<'EOF'
+Section "Device"
+    Identifier "fbdev"
+    Driver "fbdev"
+    Option "fbdev" "/dev/fb1"
+EndSection
+EOF
+
 echo "Thiết lập hoàn tất!"
 echo "Reboot để áp dụng cấu hình..."
 read -p "Nhấn Enter để reboot ngay..." 
