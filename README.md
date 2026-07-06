@@ -12,6 +12,10 @@ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/
 sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/setup-mhs35.sh)"
 ```
 
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/Natproxy.sh myuser MyPass123 3128)"
+```
+
 ## Yêu cầu
 
 - Ubuntu (khuyến nghị 22.04 LTS)
