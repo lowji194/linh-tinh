@@ -13,7 +13,7 @@ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/
 ```
 
 ```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/Natproxy.sh myuser MyPass123 3128)"
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/lowji194/linh-tinh/refs/heads/main/Natproxy.sh)" _ theloi loi123 3128
 ```
 
 ## Yêu cầu
