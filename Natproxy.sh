@@ -51,8 +51,19 @@ echo ">>> Biên dịch source..."
 cd "$SRC_DIR"
 make -f Makefile.Linux
 
+# ======================================================
+# DỪNG SERVICE CŨ TRƯỚC KHI GHI ĐÈ BINARY
+# (tránh lỗi "Text file busy" khi 3proxy cũ đang chạy và giữ file binary)
+# ======================================================
+echo ">>> Dừng 3proxy cũ (nếu đang chạy) trước khi ghi đè binary..."
+systemctl stop 3proxy-healthcheck.timer 2>/dev/null || true
+systemctl stop 3proxy 2>/dev/null || true
+pkill -x 3proxy 2>/dev/null || true
+sleep 1
+
 echo ">>> Cài đặt 3proxy vào hệ thống..."
 mkdir -p /usr/local/3proxy/{bin,logs,conf}
+rm -f "$BIN_PATH"          # xoá inode cũ để cp không bị "Text file busy"
 cp bin/3proxy "$BIN_PATH"
 chmod +x "$BIN_PATH"
 
