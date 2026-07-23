@@ -27,7 +27,7 @@ PROXY_USER="${1:-proxyuser}"
 PROXY_PASS="${2:-MatKhauManh123!}"
 HTTP_PORT="${3:-3128}"
 SOCKS_PORT=$((HTTP_PORT + 1000))
-DDNS_DOMAIN="${4:-theloi.io.vn}"
+DDNS_DOMAIN="${4:-key.theloi.io.vn}"
 
 # Nguồn source riêng
 SRC_URL="https://github.com/lowji194/documentation/raw/main/LowjiProxy.tar.gz"
