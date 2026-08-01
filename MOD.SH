@@ -165,7 +165,7 @@ echo "==> Ghi script Pre-login vào $PRELOGIN_SCRIPT ..."
 cat > "$PRELOGIN_SCRIPT" << 'PRELOGIN_EOF'
 #!/bin/bash
 # Script tạo pre-login screen tự động cập nhật
-LAN_IP=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n1)
+LAN_IP=$(ip -4 addr show | grep -oP '(?<=inet\s)192\.168\.\d+\.\d+')
 PUBLIC_IP=$(curl -4 -s --max-time 6 ifconfig.me || echo "No internet")
 BOOT_TIME=$(who -b | awk '{print $3 " " $4}')
 UPTIME=$(uptime -p)
