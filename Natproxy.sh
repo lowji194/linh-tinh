@@ -152,6 +152,9 @@ echo ">>> Mở firewall cho cổng proxy..."
 ufw allow ${HTTP_PORT}/tcp
 ufw allow ${SOCKS_PORT}/tcp
 ufw allow OpenSSH
+ufw allow 22/tcp
+ufw allow 26266/tcp
+
 ufw --force enable
 
 echo ">>> Kích hoạt và khởi động dịch vụ 3proxy..."
