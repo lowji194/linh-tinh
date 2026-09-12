@@ -1,12 +1,13 @@
 #!/bin/bash
 #
-# Script cài đặt 3proxy trên Ubuntu 24 - Tạo Proxy IPv4 (HTTP + SOCKS5)
+# Script cài đặt 3proxy trên Ubuntu 24 - Tạo Proxy IPv4 (HTTP + SOCKS5, có UDP ASSOCIATE)
 # Dùng source riêng (LowjiProxy.tar.gz) - KHÔNG git clone
 # Kèm:
 #   - health-check tự động (mỗi 5 phút) restart nếu proxy die
 #   - auth theo IP whitelist (iponly) kết hợp auth user/pass (strong)
 #   - tự động theo dõi IP của 1 domain (DDNS) mỗi 5 phút, cập nhật
 #     whitelist + restart proxy nếu IP đổi
+#   - mở firewall cho UDP ASSOCIATE (SOCKS5 UDP relay dùng dải cổng ephemeral của hệ thống)
 #
 # Chạy với quyền root: sudo bash setup_proxy.sh
 #
@@ -81,6 +82,21 @@ SERVER_IP=$(curl -s -4 ifconfig.me || curl -s -4 icanhazip.com)
 echo ">>> IP VPS phát hiện được: $SERVER_IP"
 
 # ======================================================
+# UDP ASSOCIATE (SOCKS5 UDP)
+# 3proxy tự hỗ trợ lệnh UDP ASSOCIATE trong service "socks" mà không cần
+# thêm tham số cấu hình riêng - client bắt tay TCP qua SOCKS_PORT như bình
+# thường, sau đó 3proxy mở 1 socket UDP trên 1 cổng ephemeral (do kernel
+# cấp phát trong dải net.ipv4.ip_local_port_range) để relay dữ liệu UDP.
+# Vì vậy cần mở firewall UDP cho đúng dải cổng ephemeral này, nếu không
+# UDP ASSOCIATE sẽ bắt tay được nhưng dữ liệu UDP đi/về bị chặn.
+# ======================================================
+echo ">>> Xác định dải cổng ephemeral UDP của hệ thống..."
+UDP_PORT_RANGE=$(cat /proc/sys/net/ipv4/ip_local_port_range | awk '{print $1":"$2}')
+UDP_PORT_MIN=$(echo "$UDP_PORT_RANGE" | cut -d: -f1)
+UDP_PORT_MAX=$(echo "$UDP_PORT_RANGE" | cut -d: -f2)
+echo "    -> Dải ephemeral hiện tại: ${UDP_PORT_MIN}-${UDP_PORT_MAX}"
+
+# ======================================================
 # WHITELIST IP - khởi tạo file allow_ips.list
 # Resolve IP hiện tại của domain DDNS (nếu resolve được) để đưa
 # vào whitelist ngay từ đầu, tránh phải đợi lần chạy timer đầu tiên
@@ -120,7 +136,7 @@ users ${PROXY_USER}:CL:${PROXY_PASS}
 allow ${PROXY_USER}
 # HTTP Proxy
 proxy -p${HTTP_PORT} -a -i0.0.0.0 -e${SERVER_IP}
-# SOCKS5 Proxy
+# SOCKS5 Proxy (hỗ trợ sẵn CONNECT, BIND và UDP ASSOCIATE)
 socks -p${SOCKS_PORT} -a -i0.0.0.0 -e${SERVER_IP}
 flush
 EOF
@@ -148,9 +164,11 @@ if ! grep -q "net.ipv4.ip_forward" /etc/sysctl.conf; then
   echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 fi
 
-echo ">>> Mở firewall cho cổng proxy..."
+echo ">>> Mở firewall cho cổng proxy (TCP) + dải UDP ephemeral (cho UDP ASSOCIATE)..."
 ufw allow ${HTTP_PORT}/tcp
 ufw allow ${SOCKS_PORT}/tcp
+ufw allow ${SOCKS_PORT}/udp
+ufw allow ${UDP_PORT_MIN}:${UDP_PORT_MAX}/udp
 ufw allow OpenSSH
 ufw allow 22/tcp
 ufw allow 26266/tcp
@@ -279,7 +297,7 @@ echo "========================================================"
 echo "  CÀI ĐẶT HOÀN TẤT!"
 echo "========================================================"
 echo "  HTTP Proxy : ${SERVER_IP}:${HTTP_PORT}"
-echo "  SOCKS5     : ${SERVER_IP}:${SOCKS_PORT}"
+echo "  SOCKS5     : ${SERVER_IP}:${SOCKS_PORT}  (hỗ trợ CONNECT + UDP ASSOCIATE)"
 echo "  Username   : ${PROXY_USER}"
 echo "  Password   : ${PROXY_PASS}"
 echo ""
@@ -292,11 +310,20 @@ echo ""
 echo "  Health-check: chạy mỗi 5 phút qua systemd timer 3proxy-healthcheck.timer"
 echo "  Xem log:      tail -f /usr/local/3proxy/logs/healthcheck.log"
 echo ""
+echo "  UDP ASSOCIATE (SOCKS5 UDP):"
+echo "    Đã mở firewall UDP cho cổng ${SOCKS_PORT} và dải ephemeral ${UDP_PORT_MIN}-${UDP_PORT_MAX}."
+echo "    Client SOCKS5 hỗ trợ UDP (vd: proxychains/torsocks/app hỗ trợ UDP-over-SOCKS5)"
+echo "    sẽ bắt tay TCP qua cổng ${SOCKS_PORT} rồi 3proxy tự cấp 1 cổng UDP ephemeral để relay."
+echo ""
 echo "  Test HTTP proxy (bằng user/pass):"
 echo "  curl -x http://${PROXY_USER}:${PROXY_PASS}@${SERVER_IP}:${HTTP_PORT} https://ifconfig.me"
 echo ""
-echo "  Test SOCKS5 proxy (bằng user/pass):"
+echo "  Test SOCKS5 proxy TCP (bằng user/pass):"
 echo "  curl --socks5 ${PROXY_USER}:${PROXY_PASS}@${SERVER_IP}:${SOCKS_PORT} https://ifconfig.me"
+echo ""
+echo "  Test SOCKS5 UDP (dùng curl >= 7.87, DNS-over-SOCKS5 qua UDP):"
+echo "  curl --socks5 ${PROXY_USER}:${PROXY_PASS}@${SERVER_IP}:${SOCKS_PORT} --socks5-basic https://ifconfig.me -v"
+echo "  (hoặc dùng netcat/python script gửi UDP ASSOCIATE để test relay UDP trực tiếp)"
 echo ""
 echo "  Nếu IP máy bạn nằm trong whitelist (trùng IP domain ${DDNS_DOMAIN}),"
 echo "  có thể dùng proxy KHÔNG CẦN user/pass:"
